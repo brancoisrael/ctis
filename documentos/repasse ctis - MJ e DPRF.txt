@@ -1,0 +1,34 @@
+Fabrica 
+ * Java EE 8 / Spring boot
+ * Contratos node
+ 
+ MJ
+  * JavaEE 6 (orcrim - jdk 8)/ JavaEE8 (novos - openjdk 12)
+   * JPA
+   * Banco PostgreSQL, SQL Server, Oracle e MySQL
+   * NoSQL Elastic Search (somente log)
+  * Angular 4 (orcrim) e Angular 7
+  * Testes (performance, carga, unitário, integração)
+  * Versionamento de banco (Linkbase)
+  * Integração Continua (em processo de implantação - incluir linkbase)
+  * Prepostos: Keila, Julio, Coda e Alexandre
+  * Sustentação (tecnologias variadas)
+  * Ambientes: Teste e Desenvolvimento (CTIS) , Homologação e Produção (Outra empresa e nós)
+  * Jenkins (configuração de JOB é nosso)
+  * Docker e OpenShift (CTIS - Rafael)
+  * Arquiteto residente (Adriano Palomino)
+  * Artifactory
+  * Pyton (2 devs locais)
+  
+  
+ PRF (projeto 1 ano e 2 meses)
+  * Kotlin + Angular 7 + MongoDB ,  e
+  * GIT (necessita de VPN)
+  * Geral
+    * Angular 7/8
+    * Spring Boot
+    * BD PostgreSQL , Informix
+    * Java SDK 8
+    * Demandas chegam pelo Mantis
+    * GIT
+    * Nexus
