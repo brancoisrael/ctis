@@ -1,0 +1,2 @@
+Problemas identificados
+1- tráfego de byte[] entre front e backend de forma indiscriminada.

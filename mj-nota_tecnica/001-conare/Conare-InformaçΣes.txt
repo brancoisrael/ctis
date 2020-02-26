@@ -1,0 +1,29 @@
+CONARE - Comitê Nacional para Refugiados: Sistema criado para gerenciar o processo de refugiados no Brasil
+
+Tecnologias/Dependências e suas versões:
+ * Java 1.8
+ * Wicket 6.19.0
+ * Hibernate 4.3.7
+ * Hibernate Envers 
+ * JasperReports
+ * Cliente SEI
+
+Projetos:
+ *conare-entity: projeto cirado para mapear todas as entidades de negócio (VO) do projeto, efetua todo mapeamento ORM do banco com a aplicação. A saída deste projeto é um componente empacotado JAR - Java Archive.
+ * conare-web: aplicação monolitica que contêm a implementação das regras negociais e provê toda a camada de frontend da aplicação.
+     *Estrutura de pacotes:
+        *entidade: contem a criação de entidades utilizadas pra auditoria, criação de relatórios, criação de entidade com base em outras;
+ 	*enums: contem uma única enum de estado do processo;
+	*teste contem teste de integração com SEI , funcionalidade de consultar documentos
+	* web: estrutura core que promove a divisão das camadas da aplicação, contem também os arquivos de internacionalização da aplicação (inglês, francês, espanhou, português)
+	   * auxiliar: não identifiquei o objetivo deste pacote
+	   * dao:camada de acesso a dados
+	   * dto: contem todos os dtos da aplicação, incluindo os dtos utilizados no jasper reports
+	   * exceptions: exceções customizadas
+	   * proxy: camada de abstração para integração com sistemas legdos. Atualmente só possui proxy para o serviço SEI.
+	   * report: camada de mapeamento (mapper) VO para DTO para os relatórios jasper.
+	   * security: contem questoes de seguranca correlacionada com acesso a aplicação (login, integração com ldpa, força da senha criada e demais)
+	   * service: camada de serviço, contem a aplicação das regras de negócio
+	   * util: pocote de utilidades
+	   * view: camada de visão, paginas html e controllers wicket
+	* test resource: estrutura que agrupa os testes unitários do projeto. em análise inicial, esta estrutura não aparenta abarcar cobertura total da camada de serviço.

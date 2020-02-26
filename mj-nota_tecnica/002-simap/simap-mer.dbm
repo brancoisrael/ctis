@@ -1,0 +1,3020 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.1-beta" last-position="144,0" last-zoom="0.25"
+	 default-schema="public" default-owner="postgres">
+<role name="simap"
+      superuser="true"
+      createdb="true"
+      createrole="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="dml"
+      inherit="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<database name="simapweb" encoding="UTF8" lc-collate="en_US.utf8" lc-ctype="en_US.utf8">
+	<role name="simap"/>
+	<tablespace name="pg_default"/>
+	<comment><![CDATA[http://simapweb.gov.br]]></comment>
+</database>
+
+<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="apoio" rect-visible="true" fill-color="#644bf9">
+	<role name="postgres"/>
+	<comment><![CDATA[esquema responsável por apoiar o esquema principal simap]]></comment>
+</schema>
+
+<schema name="seg" rect-visible="true" fill-color="#fe4aaf">
+	<role name="postgres"/>
+	<comment><![CDATA[esquema responsável por apoiar a segurança para o esquema principal simap]]></comment>
+</schema>
+
+<schema name="simap" rect-visible="true" fill-color="#850c27">
+	<role name="postgres"/>
+	<comment><![CDATA[esquema responsável por manter as informações principais do sistema simap]]></comment>
+</schema>
+
+<function name="retira_acentuacao"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		execution-cost="100"
+		row-amount="0">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<language name="sql" sql-disabled="true"/>
+	<return-type>
+	<type name="text" length="1"/>
+	</return-type>
+	<parameter name="p_texto">
+		<type name="text" length="0"/>
+	</parameter>
+	<definition><![CDATA[  
+ Select translate($1,'ÀÁÂÃÄÅàáâãäåÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖòóôõöÙÚÛÜùúûüÇçÑñŸÝýÿŠšŽž','AAAAAAaaaaaaEEEEeeeeIIIIiiiiOOOOOoooooUUUUuuuuCcNnYYyySsZz');  
+]]></definition>
+</function>
+
+<sequence name="seq_tb_unm_unidade_medida"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Sequence para a tabela: apoio.seq_tb_unm_unidade_medida]]></comment>
+</sequence>
+
+<table name="tb_euf_estado_uf">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de uf]]></comment>
+	<position x="60" y="60"/>
+	<column name="euf_id_estado" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[identificador de uf]]></comment>
+	</column>
+	<column name="euf_no_estado" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome da uf]]></comment>
+	</column>
+	<column name="euf_no_sigla_uf" not-null="true">
+		<type name="character" length="2"/>
+		<comment><![CDATA[sigla da uf]]></comment>
+	</column>
+	<constraint name="tb_euf_estado_uf_pkey" type="pk-constr" table="apoio.tb_euf_estado_uf">
+		<columns names="euf_id_estado" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_mun_municipio">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de municípios]]></comment>
+	<position x="440" y="60"/>
+	<column name="mun_id_municipio" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de município]]></comment>
+	</column>
+	<column name="mun_fk_euf_id_estado" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[chave estrangeira de uf]]></comment>
+	</column>
+	<column name="mun_no_municipio" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do município]]></comment>
+	</column>
+	<constraint name="tb_mun_municipio_pkey1" type="pk-constr" table="apoio.tb_mun_municipio">
+		<columns names="mun_id_municipio" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_par_parametro">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela responsável por armazenar parâmetros de sistema]]></comment>
+	<position x="960" y="60"/>
+	<column name="par_id_chave" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[Chave do parâmetro]]></comment>
+	</column>
+	<column name="par_ds_valor" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[Valor do parâmetro]]></comment>
+	</column>
+</table>
+
+<table name="tb_sen_situacao_entidade">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de situação de entidade]]></comment>
+	<position x="1220" y="60"/>
+	<column name="sen_id_situacao_entidade" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[identificador de situacao entidade]]></comment>
+	</column>
+	<column name="sen_ds_situacao_entidade" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[descrição da situação da entidade]]></comment>
+	</column>
+	<constraint name="tb_sen_situacao_entidade_pkey" type="pk-constr" table="apoio.tb_sen_situacao_entidade">
+		<columns names="sen_id_situacao_entidade" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_tin_tipo_interdicao">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<position x="1700" y="60"/>
+	<column name="tin_id_tipo_interdicao" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="tb_tin_ds_tipo_interdicao" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<constraint name="tb_tin_tipo_interdicao_pkey" type="pk-constr" table="apoio.tb_tin_tipo_interdicao">
+		<columns names="tin_id_tipo_interdicao" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_tiu_tipo_usuario">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de tipo de usuário]]></comment>
+	<position x="60" y="220"/>
+	<column name="tiu_id_tipo_usuario" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador da tabela]]></comment>
+	</column>
+	<column name="tiu_ds_tipo_usuario" not-null="true">
+		<type name="character varying" length="100"/>
+		<comment><![CDATA[descrição do tipo de usuário]]></comment>
+	</column>
+	<constraint name="tb_tiu_tipo_usuario_pkey" type="pk-constr" table="apoio.tb_tiu_tipo_usuario">
+		<columns names="tiu_id_tipo_usuario" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="tb_tsc_tipo_situacao_contrato_tb_tsc_id_tipo_situacao_contr_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="tb_tsc_tipo_situacao_contrato">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<position x="480" y="220"/>
+	<column name="tb_tsc_id_tipo_situacao_contrato" not-null="true" default-value="nextval('apoio.tb_tsc_tipo_situacao_contrato_tb_tsc_id_tipo_situacao_contr_seq'::regclass)">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="tb_tsc_ds_tipo_situacao_contrato">
+		<type name="character varying" length="255"/>
+	</column>
+	<constraint name="tb_tsc_tipo_situacao_contrato_pkey" type="pk-constr" table="apoio.tb_tsc_tipo_situacao_contrato">
+		<columns names="tb_tsc_id_tipo_situacao_contrato" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_tsm_tipo_situacao_material_proposta">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tipo de situação da proposta, se aprovada, em analise, reprovada ou solicitada complementação.]]></comment>
+	<position x="940" y="220"/>
+	<column name="tb_tsm_id_tipo_situacao_material_proposta" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Chave primária da tabela]]></comment>
+	</column>
+	<column name="tb_tsm_ds_tipo_situacao_material_proposta">
+		<type name="character varying" length="100"/>
+		<comment><![CDATA[descrição do tipo de situação da proposta de material]]></comment>
+	</column>
+	<constraint name="tb_tsm_tipo_situacao_material_proposta_pkey" type="pk-constr" table="apoio.tb_tsm_tipo_situacao_material_proposta">
+		<columns names="tb_tsm_id_tipo_situacao_material_proposta" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_unm_unidade_medida">
+	<schema name="apoio"/>
+	<role name="postgres"/>
+	<position x="1480" y="220"/>
+	<column name="unm_id_unidade" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="unm_tipo_unidade" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<constraint name="tb_unm_unidade_medida_pkey" type="pk-constr" table="apoio.tb_unm_unidade_medida">
+		<columns names="unm_id_unidade" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="seq_tb_per_perfil"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="seg"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_pfu_perfil_funcionalidade"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="seg"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_upe_usuario_perfil"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="seg"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_usu_usuario"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="seg"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="tb_fnc_funcionalidade">
+	<schema name="seg"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as funcionalidades]]></comment>
+	<position x="2160" y="60"/>
+	<column name="fnc_id_funcionalidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador da funcionalidade]]></comment>
+	</column>
+	<column name="fnc_ds_descricao_funcionalidade" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[descrição da funcionalidade]]></comment>
+	</column>
+	<column name="fnc_to_token_funcionalidade" not-null="true">
+		<type name="character varying" length="100"/>
+		<comment><![CDATA[token da funcionalidade]]></comment>
+	</column>
+	<column name="fnc_fk_gfn_id_grupo_funcionalidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira de grupo funcionalidade]]></comment>
+	</column>
+	<constraint name="tb_fup_funcionalidade_perfil_pkey" type="pk-constr" table="seg.tb_fnc_funcionalidade">
+		<columns names="fnc_id_funcionalidade" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_gfn_grupo_funcionalidade">
+	<schema name="seg"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de grupo de funcionalidade]]></comment>
+	<position x="2780" y="60"/>
+	<column name="gfn_id_grupo_funcionalidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador da tabela]]></comment>
+	</column>
+	<column name="gfn_no_nome_grupo_funcionalidade" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do grupo funcionalidade]]></comment>
+	</column>
+	<constraint name="tb_gfn_grupo_funcionalidade_gfn_no_nome_grupo_funcionalidad_key" type="uq-constr" table="seg.tb_gfn_grupo_funcionalidade">
+		<columns names="gfn_no_nome_grupo_funcionalidade" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tb_gfn_grupo_funcionalidade_pkey" type="pk-constr" table="seg.tb_gfn_grupo_funcionalidade">
+		<columns names="gfn_id_grupo_funcionalidade" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_per_perfil">
+	<schema name="seg"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar o perfis]]></comment>
+	<position x="3420" y="60"/>
+	<column name="per_id_perfil" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de perfil]]></comment>
+	</column>
+	<column name="per_no_nome_perfil" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do perfil do sistema]]></comment>
+	</column>
+	<column name="per_fk_tiu_id_tipo_usuario" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para tipo do susuario]]></comment>
+	</column>
+	<column name="per_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para situacção]]></comment>
+	</column>
+	<column name="per_bo_permite_exclusao" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[verificacao se permite exclusão do registro]]></comment>
+	</column>
+	<constraint name="tb_per_perfil_per_no_nome_perfil_key" type="uq-constr" table="seg.tb_per_perfil">
+		<columns names="per_no_nome_perfil" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tb_pes_perfil_sistema_pkey" type="pk-constr" table="seg.tb_per_perfil">
+		<columns names="per_id_perfil" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_pfu_perfil_funcionalidade">
+	<schema name="seg"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela associativa de perfil e funcionalidade]]></comment>
+	<position x="3940" y="60"/>
+	<column name="pfu_id_perfil_funcionalidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de perfil funcionalidade]]></comment>
+	</column>
+	<column name="pfu_fk_per_id_perfil" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de perfil]]></comment>
+	</column>
+	<column name="pfu_fk_fnc_id_funcionalidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador funcionalidade]]></comment>
+	</column>
+	<constraint name="tb_pfu_perfil_funcionalidade_pkey" type="pk-constr" table="seg.tb_pfu_perfil_funcionalidade">
+		<columns names="pfu_id_perfil_funcionalidade" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_upe_usuario_perfil">
+	<schema name="seg"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar a relação entre usuário e perfil de sistema]]></comment>
+	<position x="4560" y="60"/>
+	<column name="upe_id_usuario_perfil" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador da tabela perfil usuario]]></comment>
+	</column>
+	<column name="upe_fk_per_id_perfil" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador do perfil de sistema]]></comment>
+	</column>
+	<column name="upe_fk_usu_id_usuario" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de usuario do sistema]]></comment>
+	</column>
+	<constraint name="tb_upe_usuario_perfil_pkey" type="pk-constr" table="seg.tb_upe_usuario_perfil">
+		<columns names="upe_id_usuario_perfil" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_usu_usuario">
+	<schema name="seg"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informacoes de usuario de sistema]]></comment>
+	<position x="2160" y="280"/>
+	<column name="usu_id_usuario" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador do usuário]]></comment>
+	</column>
+	<column name="usu_nu_numero_cpf_usuario">
+		<type name="character varying" length="11"/>
+		<comment><![CDATA[numero do cpf do usuario]]></comment>
+	</column>
+	<column name="usu_lg_login_usuario" not-null="true">
+		<type name="character varying" length="50"/>
+		<comment><![CDATA[login do usuario]]></comment>
+	</column>
+	<column name="usu_sn_senha_usuario">
+		<type name="character varying" length="100"/>
+		<comment><![CDATA[senha criptografada do usuário]]></comment>
+	</column>
+	<column name="usu_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[situação do usuario]]></comment>
+	</column>
+	<column name="usu_bo_primeiro_acesso" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[verifica de o usuário possui primeiro acesso]]></comment>
+	</column>
+	<column name="usu_ds_descricao_email" not-null="true">
+		<type name="character varying" length="100"/>
+		<comment><![CDATA[email do usuário]]></comment>
+	</column>
+	<column name="usu_dt_data_cadastro" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[data de cadastro do usuário]]></comment>
+	</column>
+	<column name="usu_ds_hash_envio_troca_senha">
+		<type name="character varying" length="100"/>
+		<comment><![CDATA[hash que valida a troca de senha]]></comment>
+	</column>
+	<column name="usu_dt_data_expiracao_senha">
+		<type name="date" length="0"/>
+		<comment><![CDATA[data de expiração da senha]]></comment>
+	</column>
+	<column name="usu_dt_data_limite_troca_senha">
+		<type name="date" length="0"/>
+		<comment><![CDATA[data limite para troca de senha]]></comment>
+	</column>
+	<column name="usu_fk_tiu_id_tipo_usuario" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[campo para armazenar a informação de tipo de usuario]]></comment>
+	</column>
+	<column name="usu_no_nome_completo_usuario">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome completo do usuário]]></comment>
+	</column>
+	<column name="usu_no_primeiro_nome_usuario">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[Primeiro nome do usuário]]></comment>
+	</column>
+	<column name="usu_nu_numero_telefone">
+		<type name="character varying" length="11"/>
+		<comment><![CDATA[Número do telefone do usuário]]></comment>
+	</column>
+	<constraint name="tb_usu_usuario_pkey" type="pk-constr" table="seg.tb_usu_usuario">
+		<columns names="usu_id_usuario" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tb_usu_usuario_usu_ds_descricao_email_key" type="uq-constr" table="seg.tb_usu_usuario">
+		<columns names="usu_ds_descricao_email" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tb_usu_usuario_usu_ds_hash_envio_troca_senha_key" type="uq-constr" table="seg.tb_usu_usuario">
+		<columns names="usu_ds_hash_envio_troca_senha" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tb_usu_usuario_usu_lg_login_usuario_key" type="uq-constr" table="seg.tb_usu_usuario">
+		<columns names="usu_lg_login_usuario" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tb_usu_usuario_usu_nu_numero_cpf_usuario_usu_lg_login_usuar_key" type="uq-constr" table="seg.tb_usu_usuario">
+		<columns names="usu_nu_numero_cpf_usuario,usu_lg_login_usuario" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="seq_tb_can_chamado_anexo"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_ced_contrato_edificio"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_cha_chamado"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Sequence para a tabela: simap.tb_int_interdicao]]></comment>
+</sequence>
+
+<sequence name="seq_tb_chm_contrato_historico_materiais"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_cma_contrato_materiais"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_cmp_contrato_materiais_proposta"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_con_contrato"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_cou_contrato_usuario"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_cpa_contrato_materiais_proposta_anexo"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_cse_contrato_servico"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_cso_chamado_solicitante"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Sequence para tabela: simap.tb_cso_chamado_solicitante]]></comment>
+</sequence>
+
+<sequence name="seq_tb_ean_edificio_anexo"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_edi_edificio"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_fan_fornecedor_anexo"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_for_fornecedor"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_hch_historico_chamado"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_his_situacao_solicitacao"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Sequence para a tabela: simap.tb_his_situacao_solicitacao]]></comment>
+</sequence>
+
+<sequence name="seq_tb_ine_interdicao_edificio"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_inp_interdicao_pavimento"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_int_interdicao"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_ipl_interdicao_pavimento_local"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_pal_pavimento_local"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_pav_pavimento"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_ser_servico"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_sos_solicitacao_servico"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Sequence para a tabela: simap.tb_sos_solicitacao_servico]]></comment>
+</sequence>
+
+<sequence name="seq_tb_sso_situacao_solicitacao"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Sequence para a tabela: simap.tb_sso_situacao_solicitacao]]></comment>
+</sequence>
+
+<sequence name="seq_tb_tre_tecnico_responsavel"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_tb_tsr_tipo_servico"
+	 start="10000" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="tb_can_chamado_anexo">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de anexo de chamado]]></comment>
+	<position x="5100" y="60"/>
+	<column name="can_id_chamado_anexo" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de anexos do chamado]]></comment>
+	</column>
+	<column name="can_fk_cha_id_chamado" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para chamado]]></comment>
+	</column>
+	<column name="can_fk_id_storage" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para o storage]]></comment>
+	</column>
+	<column name="can_no_nome_anexo" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do arquivo]]></comment>
+	</column>
+	<column name="can_ds_mime_arquivo" not-null="true">
+		<type name="character varying" length="19"/>
+		<comment><![CDATA[extensao do arquivo]]></comment>
+	</column>
+	<column name="can_vl_tamanho_anexo" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[tamanho do arquivo]]></comment>
+	</column>
+	<constraint name="tb_can_chamado_anexo_pkey" type="pk-constr" table="simap.tb_can_chamado_anexo">
+		<columns names="can_id_chamado_anexo" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_ced_contrato_edificio">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="5640" y="60"/>
+	<column name="ced_id_contrato_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ced_fk_con_id_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ced_fk_edi_id_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_ced_contrato_edificio_pkey" type="pk-constr" table="simap.tb_ced_contrato_edificio">
+		<columns names="ced_id_contrato_edificio" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_cha_chamado">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela responsável por armazenar dados da solicitação]]></comment>
+	<position x="6180" y="60"/>
+	<column name="cha_id_chamado" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Identificador da solicitação]]></comment>
+	</column>
+	<column name="cha_descricao_servico" not-null="true">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Descrição da solicitação]]></comment>
+	</column>
+	<column name="cha_data_abertura" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Data de triagem de chamado, caso tenha virado uma solicitação]]></comment>
+	</column>
+	<column name="cha_dt_data_triagem">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="cha_status_chamado" not-null="true">
+		<type name="character varying" length="50"/>
+		<comment><![CDATA[Status do Chamado]]></comment>
+	</column>
+	<column name="cha_ds_justificativa">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Justificativa caso haja]]></comment>
+	</column>
+	<column name="cha_fk_cso_id_solicitante" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Solicitante que abriu solicitação]]></comment>
+	</column>
+	<column name="cha_fk_edi_id_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Edifício onde solicitação será executada]]></comment>
+	</column>
+	<column name="cha_fk_pav_id_pavimento" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Pavimento do Edifício onde solicitação será executada]]></comment>
+	</column>
+	<column name="cha_fk_pal_id_pavimento_local" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Local do Pavimento do Edifício onde solicitação será executada]]></comment>
+	</column>
+	<constraint name="pk_tb_cha_chamado" type="pk-constr" table="simap.tb_cha_chamado">
+		<columns names="cha_id_chamado" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_chm_contrato_historico_materiais">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="6700" y="60"/>
+	<column name="chm_id_contrato_historico_materiais" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="chm_ds_codigo" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="chm_dt_data_cadastro">
+		<type name="date" length="0"/>
+		<comment><![CDATA[Data de cadastro do material]]></comment>
+	</column>
+	<column name="chm_dt_data_reajuste">
+		<type name="date" length="0"/>
+	</column>
+	<column name="chm_tp_tipo_alteracao_material_contrato">
+		<type name="character varying" length="255"/>
+		<comment><![CDATA[Tipo de alteração feita no matérial]]></comment>
+	</column>
+	<column name="chm_ds_excluido">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="chm_ds_id_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="chm_ds_id_contrato_materiais" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="chm_ds_id_contrato_original">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="chm_ds_nome" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="chm_ds_numero_renovacao" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="chm_ds_qtdutilizada" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="chm_ds_reajustado" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="chm_ds_unidade" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="chm_ds_valorgasto" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="chm_ds_valorunitario" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="chm_ds_valorunitarioantigo">
+		<type name="numeric" length="19" precision="2"/>
+	</column>
+	<constraint name="tb_chm_contrato_historico_materiais_pkey" type="pk-constr" table="simap.tb_chm_contrato_historico_materiais">
+		<columns names="chm_id_contrato_historico_materiais" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_cma_contrato_materiais">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="7260" y="60"/>
+	<column name="cma_id_contrato_materiais" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cma_ds_codigo" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="cma_dt_data_cadastro">
+		<type name="date" length="0"/>
+		<comment><![CDATA[Data do cadastro do material]]></comment>
+	</column>
+	<column name="cma_dt_data_reajuste">
+		<type name="date" length="0"/>
+	</column>
+	<column name="cma_ds_nome" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="cma_nome_unidade_medida_outro">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="cma_ds_numero_renovacao">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cma_ds_quantidade" not-null="true">
+		<type name="numeric" length="19" precision="2"/>
+	</column>
+	<column name="cma_ds_valor_total" not-null="true">
+		<type name="numeric" length="19" precision="2"/>
+	</column>
+	<column name="cma_ds_valor_unitario" not-null="true">
+		<type name="numeric" length="19" precision="2"/>
+	</column>
+	<column name="cma_fk_con_id_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cma_fk_unm_id_unidade">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_cma_contrato_materiais_pkey" type="pk-constr" table="simap.tb_cma_contrato_materiais">
+		<columns names="cma_id_contrato_materiais" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_cmp_contrato_materiais_proposta">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="5100" y="420"/>
+	<column name="cmp_id_contrato_materiais_proposta" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cmp_fk_con_id_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cmp_nu_codigo_proposta" not-null="true" default-value="0">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cmp_no_nome_material" not-null="true">
+		<type name="character varying" length="200"/>
+	</column>
+	<column name="cmp_fk_tb_tsm_id_tipo_situacao_analise" not-null="true" default-value="5">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cmp_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cmp_dt_data_validade" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="cmp_dt_data_proposta" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="cmp_fk_unm_id_unidade">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_cmp_contrato_materiais_proposta_pkey" type="pk-constr" table="simap.tb_cmp_contrato_materiais_proposta">
+		<columns names="cmp_id_contrato_materiais_proposta" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="tb_con_contrato_con_id_contrato_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="tb_con_contrato">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="5720" y="420"/>
+	<column name="con_id_contrato" not-null="true" sequence="simap.tb_con_contrato_con_id_contrato_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="con_dt_data_fim" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="con_dt_data_inicio" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="con_bo_nao_aprovar_valor_limite_atingido">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="con_ds_numero" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="con_ds_numero_renovacao" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="con_bo_renovar_contrato">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="con_bo_contrato_renovado">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="con_nu_id_contrato_original">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Salva o id do contrato original, todo contrato renovado será uma copia do original]]></comment>
+	</column>
+	<column name="con_nu_id_contrato_anterior">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="con_fk_for_id_fornecedor" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="con_fk_tsc_id_tipo_situacao_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_con_contrato_pkey" type="pk-constr" table="simap.tb_con_contrato">
+		<columns names="con_id_contrato" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_cou_contrato_usuario">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="6280" y="420"/>
+	<column name="cou_id_contrato_usuario" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cou_fk_con_id_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cou_fk_upe_id_usuario_perfil" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_cou_contrato_usuario_pkey" type="pk-constr" table="simap.tb_cou_contrato_usuario">
+		<columns names="cou_id_contrato_usuario" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_cpa_contrato_materiais_proposta_anexo">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="6800" y="420"/>
+	<column name="cpa_id_anexo_contrato_materiais_proposta" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cpa_fk_sen_id_situacao_entidade" not-null="true" default-value="1">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Se a entidade esta ativa ou inativa]]></comment>
+	</column>
+	<column name="cpa_fk_id_storage" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cpa_fk_cmp_id_contrato_materiais_proposta" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cpa_no_extensao_anexo" not-null="true">
+		<type name="character varying" length="10"/>
+	</column>
+	<column name="cpa_no_nome_anexo" not-null="true">
+		<type name="character varying" length="200"/>
+	</column>
+	<column name="cpa_vl_tamanho_anexo" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="cpa_vl_valor_unitario">
+		<type name="numeric" length="19" precision="2"/>
+	</column>
+	<constraint name="tb_cpa_id_anexo_contrato_materiais_proposta_pkey" type="pk-constr" table="simap.tb_cpa_contrato_materiais_proposta_anexo">
+		<columns names="cpa_id_anexo_contrato_materiais_proposta" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="tb_cse_contrato_servico_cse_id_contrato_servico_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="simap"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="tb_cse_contrato_servico">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="7440" y="420"/>
+	<column name="cse_id_contrato_servico" not-null="true" sequence="simap.tb_cse_contrato_servico_cse_id_contrato_servico_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cse_fk_con_id_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="cse_fk_tsr_id_tipo_servico" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_cse_contrato_servico_pkey" type="pk-constr" table="simap.tb_cse_contrato_servico">
+		<columns names="cse_id_contrato_servico" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_cso_chamado_solicitante">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela responsável por armazenar solicitante que abriu chamado]]></comment>
+	<position x="5100" y="720"/>
+	<column name="cso_id_solicitante" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Identificador do solicitante]]></comment>
+	</column>
+	<column name="cso_ds_nome" not-null="true">
+		<type name="character varying" length="128"/>
+		<comment><![CDATA[Nome do solicitante]]></comment>
+	</column>
+	<column name="cso_ds_ramal" not-null="true">
+		<type name="character varying" length="12"/>
+		<comment><![CDATA[Ramal do solicitante]]></comment>
+	</column>
+	<column name="cso_ds_email" not-null="true">
+		<type name="character varying" length="50"/>
+		<comment><![CDATA[Email do solicitante]]></comment>
+	</column>
+	<column name="cso_ds_setor">
+		<type name="character varying" length="32"/>
+		<comment><![CDATA[Setor do solicitante]]></comment>
+	</column>
+	<column name="cso_fk_edi_id_edificio">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Edifício do solicitante]]></comment>
+	</column>
+	<column name="cso_fk_pav_id_pavimento">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Pavimento do Edifício do solicitante]]></comment>
+	</column>
+	<column name="cso_fk_pal_id_pavimento_local">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Local do Pavimento do Edifício do solicitante]]></comment>
+	</column>
+	<constraint name="pk_tb_cso_chamado_solicitante" type="pk-constr" table="simap.tb_cso_chamado_solicitante">
+		<columns names="cso_id_solicitante" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_ean_edificio_anexo">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de anexo de edifício]]></comment>
+	<position x="5680" y="720"/>
+	<column name="ean_id_edificio_anexo" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de anexos do edificio]]></comment>
+	</column>
+	<column name="ean_fk_edi_id_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para edificio]]></comment>
+	</column>
+	<column name="ean_ds_descricao_arquivo" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[descrição do arquivo]]></comment>
+	</column>
+	<column name="ean_fk_id_storage" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para o storage]]></comment>
+	</column>
+	<column name="ean_no_nome_anexo" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do arquivo]]></comment>
+	</column>
+	<column name="ean_no_extensao_anexo" not-null="true">
+		<type name="character varying" length="10"/>
+		<comment><![CDATA[extensao do arquivo]]></comment>
+	</column>
+	<column name="ean_vl_tamanho_anexo" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[tamanho do arquivo]]></comment>
+	</column>
+	<constraint name="tb_ean_edificio_anexo_pkey" type="pk-constr" table="simap.tb_ean_edificio_anexo">
+		<columns names="ean_id_edificio_anexo" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_edi_edificio">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de edificio]]></comment>
+	<position x="6200" y="720"/>
+	<column name="edi_id_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador da entidade]]></comment>
+	</column>
+	<column name="edi_ds_nome" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do edifício]]></comment>
+	</column>
+	<column name="edi_fk_mun_id_municipio" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para município]]></comment>
+	</column>
+	<column name="edi_ds_endereco" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[endereço do edifício]]></comment>
+	</column>
+	<column name="edi_ds_numero" not-null="true">
+		<type name="character varying" length="10"/>
+		<comment><![CDATA[número do edifício]]></comment>
+	</column>
+	<column name="edi_ds_complemento">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[complemento do endereço do edificio]]></comment>
+	</column>
+	<column name="edi_ds_bairro" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[bairro do endereço do edificio]]></comment>
+	</column>
+	<column name="edi_ds_cep" not-null="true">
+		<type name="character varying" length="8"/>
+		<comment><![CDATA[cep do endereço do edificio]]></comment>
+	</column>
+	<column name="edi_ds_contato">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[contato do edificio]]></comment>
+	</column>
+	<column name="edi_nu_numero_telefone">
+		<type name="character varying" length="13"/>
+		<comment><![CDATA[número de telefone do contato do edificio]]></comment>
+	</column>
+	<column name="edi_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para situação da entidade]]></comment>
+	</column>
+	<column name="edi_fk_ine_id_interdicao_edificio">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="edi_ds_observacao">
+		<type name="text" length="0"/>
+		<comment><![CDATA[observação do cadastro de edificio]]></comment>
+	</column>
+	<constraint name="tb_edi_edificio_pkey" type="pk-constr" table="simap.tb_edi_edificio">
+		<columns names="edi_id_edificio" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_fan_fornecedor_anexo">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de anexo do fornecedor]]></comment>
+	<position x="6700" y="720"/>
+	<column name="fan_id_fornecedor_anexo" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de anexo de fornecedor]]></comment>
+	</column>
+	<column name="fan_fk_for_id_fornecedor" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para fornecedor]]></comment>
+	</column>
+	<column name="fan_ds_descricao_arquivo" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[descrição do arquivo]]></comment>
+	</column>
+	<column name="fan_fk_id_storage" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para o storage]]></comment>
+	</column>
+	<column name="fan_no_nome_anexo" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do arquivo]]></comment>
+	</column>
+	<column name="fan_no_extensao_anexo" not-null="true">
+		<type name="character varying" length="10"/>
+		<comment><![CDATA[extensao do arquivo]]></comment>
+	</column>
+	<column name="fan_vl_tamanho_anexo" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[tamanho do arquivo]]></comment>
+	</column>
+	<column name="fan_dt_data_cadastro" not-null="true">
+		<type name="date" length="0"/>
+		<comment><![CDATA[data de cadastro do arquivo]]></comment>
+	</column>
+	<constraint name="tb_fan_fornecedor_anexo_pkey" type="pk-constr" table="simap.tb_fan_fornecedor_anexo">
+		<columns names="fan_id_fornecedor_anexo" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_for_fornecedor">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de fornecedor]]></comment>
+	<position x="7260" y="720"/>
+	<column name="for_id_fornecedor" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de fornecedor]]></comment>
+	</column>
+	<column name="for_nu_cnpj" not-null="true">
+		<type name="character varying" length="14"/>
+		<comment><![CDATA[número cpnj do fornecedor]]></comment>
+	</column>
+	<column name="for_no_razao_social" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[razão social de fornecedor]]></comment>
+	</column>
+	<column name="for_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para situação da entidade]]></comment>
+	</column>
+	<column name="for_ds_endereco" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[endereço do fornecedor]]></comment>
+	</column>
+	<column name="for_ds_numero" not-null="true">
+		<type name="character varying" length="10"/>
+		<comment><![CDATA[número do endereço do fornecedor]]></comment>
+	</column>
+	<column name="for_ds_complemento">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[complemento do endereço do fornecedor]]></comment>
+	</column>
+	<column name="for_ds_bairro" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[bairro do endereço do fornecedor]]></comment>
+	</column>
+	<column name="for_ds_cep" not-null="true">
+		<type name="character varying" length="8"/>
+		<comment><![CDATA[cep do endereço do fornecedor]]></comment>
+	</column>
+	<column name="for_nu_numero_telefone" not-null="true">
+		<type name="character varying" length="13"/>
+		<comment><![CDATA[telefone do fornecedor]]></comment>
+	</column>
+	<column name="for_ds_site">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[site do fornecedor]]></comment>
+	</column>
+	<column name="for_ds_email" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[email do fornecedor]]></comment>
+	</column>
+	<column name="for_ds_observacao">
+		<type name="text" length="0"/>
+		<comment><![CDATA[observaçõa do cadastro de fornecedor]]></comment>
+	</column>
+	<constraint name="tb_for_fornecedor_pkey" type="pk-constr" table="simap.tb_for_fornecedor">
+		<columns names="for_id_fornecedor" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_hch_historico_chamado">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="5100" y="1080"/>
+	<column name="hch_id_historico_chamado" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="hch_id_chamado" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="hch_descricao_servico" not-null="true">
+		<type name="character varying" length="1024"/>
+	</column>
+	<column name="hch_data_abertura" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="hch_status_chamado" not-null="true">
+		<type name="character varying" length="50"/>
+	</column>
+	<column name="hch_fk_cso_id_solicitante" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="hch_fk_edi_id_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="hch_fk_pav_id_pavimento" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="hch_fk_pal_id_pavimento_local" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="hch_ds_justificativa">
+		<type name="character varying" length="1024"/>
+	</column>
+	<column name="hch_fk_usu_id_usuario" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="pk_tb_hch_historico_chamado" type="pk-constr" table="simap.tb_hch_historico_chamado">
+		<columns names="hch_id_historico_chamado" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_his_situacao_solicitacao">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela responsável por armazenar os dados referentes ao histórico da solicitação]]></comment>
+	<position x="5660" y="1080"/>
+	<column name="his_id_historico_situacao_solicitacao" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Identificador do historico do chamado]]></comment>
+	</column>
+	<column name="his_data_historico_situacao_solicitacao" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Data da alteracao na solicitação]]></comment>
+	</column>
+	<column name="his_justificativa_situacao_solicitacao">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Justificativa de alteração na solicitação]]></comment>
+	</column>
+	<column name="his_fk_sos_id_solicitacao_servico">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Solicitação alterada]]></comment>
+	</column>
+	<column name="his_fk_sso_id_situacao_solicitacao">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Nova situação da solicitação]]></comment>
+	</column>
+	<constraint name="pk_tb_his_situacao_solicitacao" type="pk-constr" table="simap.tb_his_situacao_solicitacao">
+		<columns names="his_id_historico_situacao_solicitacao" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_ine_interdicao_edificio">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="6260" y="1080"/>
+	<column name="ine_id_interdicao_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ine_ds_justificativa">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[justificativa da interdição do edificio]]></comment>
+	</column>
+	<column name="ine_bo_prazo_em_vigencia">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="ine_dt_data_fim_interdicao" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="ine_dt_data_inicio_interdicao" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="ine_fk_edi_id_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ine_fk_tin_id_tipo_interdicao" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_ine_interdicao_edificio_pkey" type="pk-constr" table="simap.tb_ine_interdicao_edificio">
+		<columns names="ine_id_interdicao_edificio" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_inp_interdicao_pavimento">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="6800" y="1080"/>
+	<column name="inp_id_interdicao_pavimento" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="inp_dt_data_fim_interdicao">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="inp_dt_data_inicio_interdicao">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="inp_ds_justificativa">
+		<type name="character varying" length="200"/>
+	</column>
+	<column name="inp_fk_pav_id_pavimento" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="inp_fk_tin_id_tipo_interdicao" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="inp_fk_ine_id_interdicao_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_inp_interdicao_pavimento_pkey" type="pk-constr" table="simap.tb_inp_interdicao_pavimento">
+		<columns names="inp_id_interdicao_pavimento" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_int_interdicao">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por todas as interdições]]></comment>
+	<position x="7340" y="1080"/>
+	<column name="int_id_interdicao" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[id de interdição]]></comment>
+	</column>
+	<column name="int_data_inicio" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[data início de interdição]]></comment>
+	</column>
+	<column name="int_data_fim" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[data fim de interdição]]></comment>
+	</column>
+	<column name="int_ds_justificativa" not-null="true">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[descrição de justificativa]]></comment>
+	</column>
+	<column name="int_bo_encadeado">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[boleano pra identificar se o tipo de interdição]]></comment>
+	</column>
+	<constraint name="pk_tb_int_interdicao" type="pk-constr" table="simap.tb_int_interdicao">
+		<columns names="int_id_interdicao" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_ipl_interdicao_pavimento_local">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="5100" y="1420"/>
+	<column name="ipl_id_interdicao_pavimento_local" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ipl_dt_data_fim_interdicao">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="ipl_dt_data_inicio_interdicao">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="ipl_ds_justificativa">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[justificativa da interdição do local]]></comment>
+	</column>
+	<column name="ipl_fk_pal_id_pavimento_local" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="ipl_fk_ine_id_interdicao_pavimento" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="tb_ipl_interdicao_pavimento_local_pkey" type="pk-constr" table="simap.tb_ipl_interdicao_pavimento_local">
+		<columns names="ipl_id_interdicao_pavimento_local" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_pal_pavimento_local">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informacoes de pavimento local do edificio]]></comment>
+	<position x="5660" y="1420"/>
+	<column name="pal_id_pavimento_local" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de pavimento local]]></comment>
+	</column>
+	<column name="pal_fk_pav_id_pavimento" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para pavimento]]></comment>
+	</column>
+	<column name="pal_ds_nome_local" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do pavimento local]]></comment>
+	</column>
+	<column name="pal_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira de situacao da entidade]]></comment>
+	</column>
+	<column name="pal_fk_int_id_interdicao">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira de interdição de local]]></comment>
+	</column>
+	<constraint name="tb_pal_pavimento_local_pkey" type="pk-constr" table="simap.tb_pal_pavimento_local">
+		<columns names="pal_id_pavimento_local" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_pav_pavimento">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsavel por armazenar as infoemacoes de pavimento do edificio]]></comment>
+	<position x="6260" y="1420"/>
+	<column name="pav_id_pavimento" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de pavimento]]></comment>
+	</column>
+	<column name="pav_fk_edi_id_edificio" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para edificio]]></comment>
+	</column>
+	<column name="pav_no_pavimento" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do pavimento]]></comment>
+	</column>
+	<column name="pav_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira de situacao da entidade]]></comment>
+	</column>
+	<constraint name="tb_pav_pavimento_pkey" type="pk-constr" table="simap.tb_pav_pavimento">
+		<columns names="pav_id_pavimento" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_ser_servico">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de serviço]]></comment>
+	<position x="6840" y="1420"/>
+	<column name="ser_id_servico" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de serviço]]></comment>
+	</column>
+	<column name="ser_no_nome_servico" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do serviço]]></comment>
+	</column>
+	<column name="ser_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para situacao da entidade]]></comment>
+	</column>
+	<constraint name="tb_ser_servico_pkey" type="pk-constr" table="simap.tb_ser_servico">
+		<columns names="ser_id_servico" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_sos_solicitacao_servico">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela responsável por armazenar os dados referentes ao serviço]]></comment>
+	<position x="7380" y="1420"/>
+	<column name="sos_id_solicitacao_servico" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Identificador do chamado]]></comment>
+	</column>
+	<column name="sos_ds_numero_solicitacao">
+		<type name="character varying" length="14"/>
+		<comment><![CDATA[Número da solicitação FORMATADO]]></comment>
+	</column>
+	<column name="sos_nu_numero_solicitacao">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Número da solicitação]]></comment>
+	</column>
+	<column name="sso_ds_situacao_solicitacao">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Situação da Solicitação]]></comment>
+	</column>
+	<column name="sos_dt_data_triagem" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Data da triagem]]></comment>
+	</column>
+	<column name="sos_fk_sso_id_situacao_solicitacao">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Situacao ativa do contrato]]></comment>
+	</column>
+	<column name="sos_fk_con_id_contrato">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Contrato da solicitação]]></comment>
+	</column>
+	<column name="sos_fk_ser_id_servico">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Serviço da solicitação]]></comment>
+	</column>
+	<column name="sos_fk_tsr_id_tipo_servico">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Tipo do serviço da solicitação]]></comment>
+	</column>
+	<column name="sos_fk_cha_id_chamado">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Id que referencia a tabela solicitacao de servico]]></comment>
+	</column>
+	<constraint name="pk_tb_sos_solicitacao_servico" type="pk-constr" table="simap.tb_sos_solicitacao_servico">
+		<columns names="sos_id_solicitacao_servico" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_sso_situacao_solicitacao">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela responsável por armazenar status com nível da situação da solicitação]]></comment>
+	<position x="5100" y="1740"/>
+	<column name="sso_id_situacao_solicitacao" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Identificador da solicitação]]></comment>
+	</column>
+	<column name="sso_ds_nome_situacao" not-null="true">
+		<type name="character varying" length="56"/>
+		<comment><![CDATA[Nome da situação da solicitação]]></comment>
+	</column>
+	<column name="sso_ds_descricao">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Descrição completa da situação da solicitação]]></comment>
+	</column>
+	<column name="sso_ds_nivel" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[Nível em que a situação se encontra]]></comment>
+	</column>
+	<constraint name="pk_tb_sso_situacao_solicitacao" type="pk-constr" table="simap.tb_sso_situacao_solicitacao">
+		<columns names="sso_id_situacao_solicitacao" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tb_tre_tecnico_responsavel">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<position x="5580" y="1740"/>
+	<column name="tre_id_tecnico_responsavel" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="tre_fk_con_id_contrato" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="tre_no_nome_tecnico" not-null="true">
+		<type name="character varying" length="200"/>
+	</column>
+	<column name="tre_nu_cpf_tecnico">
+		<type name="character varying" length="11"/>
+	</column>
+	<column name="tre_nu_rg_tecnico">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="tre_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="tre_ds_ocupacao_tecnico">
+		<type name="character varying" length="200"/>
+	</column>
+</table>
+
+<table name="tb_tsr_tipo_servico">
+	<schema name="simap"/>
+	<role name="postgres"/>
+	<comment><![CDATA[tabela responsável por armazenar as informações de tipo de serviço]]></comment>
+	<position x="6140" y="1740"/>
+	<column name="tsr_id_tipo_servico" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[identificador de tipo de serviço]]></comment>
+	</column>
+	<column name="tsr_fk_ser_id_servico" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[chave estrangeira para serviço]]></comment>
+	</column>
+	<column name="tsr_no_nome_tipo_servico" not-null="true">
+		<type name="character varying" length="200"/>
+		<comment><![CDATA[nome do tipo de serviço]]></comment>
+	</column>
+	<column name="tsr_fk_sen_id_situacao_entidade" not-null="true">
+		<type name="bigint" length="0"/>
+		<comment><![CDATA[situação do tipo de serviço]]></comment>
+	</column>
+	<column name="tsr_vl_tempo_execucao" not-null="true">
+		<type name="character varying" length="10"/>
+		<comment><![CDATA[valor do tempo de execução]]></comment>
+	</column>
+	<constraint name="tb_tsr_tipo_servico_pkey" type="pk-constr" table="simap.tb_tsr_tipo_servico">
+		<columns names="tsr_id_tipo_servico" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="tb_mun_municipio_mun_fk_euf_id_estado_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_euf_estado_uf" table="apoio.tb_mun_municipio">
+	<columns names="mun_fk_euf_id_estado" ref-type="src-columns"/>
+	<columns names="euf_id_estado" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_fnc_funcionalidade_fnc_fk_gfn_id_grupo_funcionalidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="seg.tb_gfn_grupo_funcionalidade" table="seg.tb_fnc_funcionalidade">
+	<columns names="fnc_fk_gfn_id_grupo_funcionalidade" ref-type="src-columns"/>
+	<columns names="gfn_id_grupo_funcionalidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_per_perfil_per_fk_sen_id_situacao_entidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="seg.tb_per_perfil">
+	<columns names="per_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_per_perfil_per_fk_tiu_id_tipo_usuario_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_tiu_tipo_usuario" table="seg.tb_per_perfil">
+	<columns names="per_fk_tiu_id_tipo_usuario" ref-type="src-columns"/>
+	<columns names="tiu_id_tipo_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_pfu_perfil_funcionalidade_pfu_fk_fnc_id_funcionalidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="seg.tb_fnc_funcionalidade" table="seg.tb_pfu_perfil_funcionalidade">
+	<columns names="pfu_fk_fnc_id_funcionalidade" ref-type="src-columns"/>
+	<columns names="fnc_id_funcionalidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_pfu_perfil_funcionalidade_pfu_fk_per_id_perfil_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="seg.tb_per_perfil" table="seg.tb_pfu_perfil_funcionalidade">
+	<columns names="pfu_fk_per_id_perfil" ref-type="src-columns"/>
+	<columns names="per_id_perfil" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_upe_usuario_perfil_upe_fk_per_id_perfil_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="seg.tb_per_perfil" table="seg.tb_upe_usuario_perfil">
+	<columns names="upe_fk_per_id_perfil" ref-type="src-columns"/>
+	<columns names="per_id_perfil" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_upe_usuario_perfil_upe_fk_usu_id_usuario_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="seg.tb_usu_usuario" table="seg.tb_upe_usuario_perfil">
+	<columns names="upe_fk_usu_id_usuario" ref-type="src-columns"/>
+	<columns names="usu_id_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_usu_usuario_usu_fk_sen_id_situacao_entidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="seg.tb_usu_usuario">
+	<columns names="usu_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_usu_usuario_usu_fk_tiu_id_tipo_usuario_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_tiu_tipo_usuario" table="seg.tb_usu_usuario">
+	<columns names="usu_fk_tiu_id_tipo_usuario" ref-type="src-columns"/>
+	<columns names="tiu_id_tipo_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_can_chamado_anexo_can_fk_cha_id_chamado_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_cha_chamado" table="simap.tb_can_chamado_anexo">
+	<columns names="can_fk_cha_id_chamado" ref-type="src-columns"/>
+	<columns names="cha_id_chamado" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_ced_contrato_edificio_fk_tb_ced_contrato_edificio" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_edi_edificio" table="simap.tb_ced_contrato_edificio">
+	<columns names="ced_fk_edi_id_edificio" ref-type="src-columns"/>
+	<columns names="edi_id_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_ced_contrato_edificio_fk_tb_con_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_con_contrato" table="simap.tb_ced_contrato_edificio">
+	<columns names="ced_fk_con_id_contrato" ref-type="src-columns"/>
+	<columns names="con_id_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cha_chamado_cha_fk_cso_id_solicitante" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_cso_chamado_solicitante" table="simap.tb_cha_chamado">
+	<columns names="cha_fk_cso_id_solicitante" ref-type="src-columns"/>
+	<columns names="cso_id_solicitante" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cha_chamado_cha_fk_edi_id_edificio" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_edi_edificio" table="simap.tb_cha_chamado">
+	<columns names="cha_fk_edi_id_edificio" ref-type="src-columns"/>
+	<columns names="edi_id_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cha_chamado_cha_fk_pal_id_pavimento_local" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pal_pavimento_local" table="simap.tb_cha_chamado">
+	<columns names="cha_fk_pal_id_pavimento_local" ref-type="src-columns"/>
+	<columns names="pal_id_pavimento_local" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cha_chamado_cha_fk_pav_id_pavimento" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pav_pavimento" table="simap.tb_cha_chamado">
+	<columns names="cha_fk_pav_id_pavimento" ref-type="src-columns"/>
+	<columns names="pav_id_pavimento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cma_contrato_materiais_fk_tb_con_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_con_contrato" table="simap.tb_cma_contrato_materiais">
+	<columns names="cma_fk_con_id_contrato" ref-type="src-columns"/>
+	<columns names="con_id_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cma_contrato_materiais_fk_tb_unm_unidade_medida" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_unm_unidade_medida" table="simap.tb_cma_contrato_materiais">
+	<columns names="cma_fk_unm_id_unidade" ref-type="src-columns"/>
+	<columns names="unm_id_unidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cmp_contrato_materiais_proposta_fk_tb_con_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_con_contrato" table="simap.tb_cmp_contrato_materiais_proposta">
+	<columns names="cmp_fk_con_id_contrato" ref-type="src-columns"/>
+	<columns names="con_id_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cmp_contrato_materiais_proposta_fk_tb_sen_situacao_entidade" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_cmp_contrato_materiais_proposta">
+	<columns names="cmp_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cmp_contrato_materiais_proposta_fk_tb_unm_unidade_medida" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_unm_unidade_medida" table="simap.tb_cmp_contrato_materiais_proposta">
+	<columns names="cmp_fk_unm_id_unidade" ref-type="src-columns"/>
+	<columns names="unm_id_unidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_con_contrato_fk_tb_for_fornecedor" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_for_fornecedor" table="simap.tb_con_contrato">
+	<columns names="con_fk_for_id_fornecedor" ref-type="src-columns"/>
+	<columns names="for_id_fornecedor" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_con_contrato_fk_tb_tsc_tipo_situacao_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_tsc_tipo_situacao_contrato" table="simap.tb_con_contrato">
+	<columns names="con_fk_tsc_id_tipo_situacao_contrato" ref-type="src-columns"/>
+	<columns names="tb_tsc_id_tipo_situacao_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cou_contrato_usuario_fk_tb_con_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_con_contrato" table="simap.tb_cou_contrato_usuario">
+	<columns names="cou_fk_con_id_contrato" ref-type="src-columns"/>
+	<columns names="con_id_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cou_contrato_usuario_fk_tb_upe_usuario_perfil" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="seg.tb_upe_usuario_perfil" table="simap.tb_cou_contrato_usuario">
+	<columns names="cou_fk_upe_id_usuario_perfil" ref-type="src-columns"/>
+	<columns names="upe_id_usuario_perfil" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cpa_anexo_contrato_materiais_proposta_fk_tb_cmp_contrato_mat" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_cmp_contrato_materiais_proposta" table="simap.tb_cpa_contrato_materiais_proposta_anexo">
+	<columns names="cpa_fk_cmp_id_contrato_materiais_proposta" ref-type="src-columns"/>
+	<columns names="cmp_id_contrato_materiais_proposta" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cpa_contrato_mat_prop_per_FK_sen_id_sit_enti_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_cpa_contrato_materiais_proposta_anexo">
+	<columns names="cpa_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cse_contrato_servico_fk_tb_con_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_con_contrato" table="simap.tb_cse_contrato_servico">
+	<columns names="cse_fk_con_id_contrato" ref-type="src-columns"/>
+	<columns names="con_id_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cse_contrato_servico_fk_tb_tsr_tipo_servico" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_tsr_tipo_servico" table="simap.tb_cse_contrato_servico">
+	<columns names="cse_fk_tsr_id_tipo_servico" ref-type="src-columns"/>
+	<columns names="tsr_id_tipo_servico" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cso_chamado_solicitante_cso_fk_edi_id_edificio" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_edi_edificio" table="simap.tb_cso_chamado_solicitante">
+	<columns names="cso_fk_edi_id_edificio" ref-type="src-columns"/>
+	<columns names="edi_id_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cso_chamado_solicitante_cso_fk_pal_id_pavimento_local" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pal_pavimento_local" table="simap.tb_cso_chamado_solicitante">
+	<columns names="cso_fk_pal_id_pavimento_local" ref-type="src-columns"/>
+	<columns names="pal_id_pavimento_local" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_cso_chamado_solicitante_cso_fk_pav_id_pavimento" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pav_pavimento" table="simap.tb_cso_chamado_solicitante">
+	<columns names="cso_fk_pav_id_pavimento" ref-type="src-columns"/>
+	<columns names="pav_id_pavimento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_ean_edificio_anexo_ean_fk_edi_id_edificio_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_edi_edificio" table="simap.tb_ean_edificio_anexo">
+	<columns names="ean_fk_edi_id_edificio" ref-type="src-columns"/>
+	<columns names="edi_id_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_edi_edificio_edi_fk_mun_id_municipio_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_mun_municipio" table="simap.tb_edi_edificio">
+	<columns names="edi_fk_mun_id_municipio" ref-type="src-columns"/>
+	<columns names="mun_id_municipio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_edi_edificio_fk_tb_ine_interdicao_edificio" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_ine_interdicao_edificio" table="simap.tb_edi_edificio">
+	<columns names="edi_fk_ine_id_interdicao_edificio" ref-type="src-columns"/>
+	<columns names="ine_id_interdicao_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_edi_edificio_fk_tb_sen_situacao_entidade" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_edi_edificio">
+	<columns names="edi_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_fan_fornecedor_anexo_fan_fk_for_id_fornecedor_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_for_fornecedor" table="simap.tb_fan_fornecedor_anexo">
+	<columns names="fan_fk_for_id_fornecedor" ref-type="src-columns"/>
+	<columns names="for_id_fornecedor" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_for_fornecedor_for_fk_sen_id_situacao_entidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_for_fornecedor">
+	<columns names="for_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_hch_historico_chamado_hch_fk_cso_id_solicitante" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_cso_chamado_solicitante" table="simap.tb_hch_historico_chamado">
+	<columns names="hch_fk_cso_id_solicitante" ref-type="src-columns"/>
+	<columns names="cso_id_solicitante" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_hch_historico_chamado_hch_fk_edi_id_edificio" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_edi_edificio" table="simap.tb_hch_historico_chamado">
+	<columns names="hch_fk_edi_id_edificio" ref-type="src-columns"/>
+	<columns names="edi_id_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_hch_historico_chamado_hch_fk_pal_id_pavimento_local" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pal_pavimento_local" table="simap.tb_hch_historico_chamado">
+	<columns names="hch_fk_pal_id_pavimento_local" ref-type="src-columns"/>
+	<columns names="pal_id_pavimento_local" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_hch_historico_chamado_hch_fk_pav_id_pavimento" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pav_pavimento" table="simap.tb_hch_historico_chamado">
+	<columns names="hch_fk_pav_id_pavimento" ref-type="src-columns"/>
+	<columns names="pav_id_pavimento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_hch_historico_chamado_hch_fk_usu_id_usuario" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="seg.tb_usu_usuario" table="simap.tb_hch_historico_chamado">
+	<columns names="hch_fk_usu_id_usuario" ref-type="src-columns"/>
+	<columns names="usu_id_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_his_historico_solicitacao_his_fk_sos_id_solicitacao_servico" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_sos_solicitacao_servico" table="simap.tb_his_situacao_solicitacao">
+	<columns names="his_fk_sos_id_solicitacao_servico" ref-type="src-columns"/>
+	<columns names="sos_id_solicitacao_servico" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_his_historico_solicitacao_sos_fk_sso_id_situacao_solicitacao" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_sso_situacao_solicitacao" table="simap.tb_his_situacao_solicitacao">
+	<columns names="his_fk_sso_id_situacao_solicitacao" ref-type="src-columns"/>
+	<columns names="sso_id_situacao_solicitacao" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_ine_interdicao_edificio_fk_tb_edi_edificio" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_edi_edificio" table="simap.tb_ine_interdicao_edificio">
+	<columns names="ine_fk_edi_id_edificio" ref-type="src-columns"/>
+	<columns names="edi_id_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_ine_interdicao_edificio_fk_tb_tin_tipo_interdicao" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_tin_tipo_interdicao" table="simap.tb_ine_interdicao_edificio">
+	<columns names="ine_fk_tin_id_tipo_interdicao" ref-type="src-columns"/>
+	<columns names="tin_id_tipo_interdicao" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_tb_inp_interdicao_pav_pktb_ine_inter_edif" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_ine_interdicao_edificio" table="simap.tb_inp_interdicao_pavimento">
+	<columns names="inp_fk_ine_id_interdicao_edificio" ref-type="src-columns"/>
+	<columns names="ine_id_interdicao_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_inp_interdicao_pavimento_fk_tb_pav_pavimento" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pav_pavimento" table="simap.tb_inp_interdicao_pavimento">
+	<columns names="inp_fk_pav_id_pavimento" ref-type="src-columns"/>
+	<columns names="pav_id_pavimento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_inp_interdicao_pavimento_fk_tb_tin_tipo_interdicao" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_tin_tipo_interdicao" table="simap.tb_inp_interdicao_pavimento">
+	<columns names="inp_fk_tin_id_tipo_interdicao" ref-type="src-columns"/>
+	<columns names="tin_id_tipo_interdicao" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_tb_ipl_interdicao_pav_local_pk_tb_inp_inter_pavimento" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_inp_interdicao_pavimento" table="simap.tb_ipl_interdicao_pavimento_local">
+	<columns names="ipl_fk_ine_id_interdicao_pavimento" ref-type="src-columns"/>
+	<columns names="inp_id_interdicao_pavimento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_tb_pal_pavimento_local_fk_tb_ipl_interr_pav_local" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pal_pavimento_local" table="simap.tb_ipl_interdicao_pavimento_local">
+	<columns names="ipl_fk_pal_id_pavimento_local" ref-type="src-columns"/>
+	<columns names="pal_id_pavimento_local" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_pal_pavimento_loca_pal_fk_int_id_interdicao" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_int_interdicao" table="simap.tb_pal_pavimento_local">
+	<columns names="pal_fk_int_id_interdicao" ref-type="src-columns"/>
+	<columns names="int_id_interdicao" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_pal_pavimento_local_pal_fk_pav_id_pavimento_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_pav_pavimento" table="simap.tb_pal_pavimento_local">
+	<columns names="pal_fk_pav_id_pavimento" ref-type="src-columns"/>
+	<columns names="pav_id_pavimento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_pal_pavimento_local_pal_fk_sen_id_situacao_entidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_pal_pavimento_local">
+	<columns names="pal_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_pav_pavimento_pav_fk_edi_id_edificio_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_edi_edificio" table="simap.tb_pav_pavimento">
+	<columns names="pav_fk_edi_id_edificio" ref-type="src-columns"/>
+	<columns names="edi_id_edificio" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_pav_pavimento_pav_fk_sen_id_situacao_entidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_pav_pavimento">
+	<columns names="pav_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_ser_servico_ser_fk_sen_id_situacao_entidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_ser_servico">
+	<columns names="ser_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_sos_solicitacao_servico_sos_fk_cha_id_chamado" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_cha_chamado" table="simap.tb_sos_solicitacao_servico">
+	<columns names="sos_fk_cha_id_chamado" ref-type="src-columns"/>
+	<columns names="cha_id_chamado" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_sos_solicitacao_servico_sos_fk_con_id_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_con_contrato" table="simap.tb_sos_solicitacao_servico">
+	<columns names="sos_fk_con_id_contrato" ref-type="src-columns"/>
+	<columns names="con_id_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_sos_solicitacao_servico_sos_fk_ser_id_servico" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_ser_servico" table="simap.tb_sos_solicitacao_servico">
+	<columns names="sos_fk_ser_id_servico" ref-type="src-columns"/>
+	<columns names="ser_id_servico" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_sos_solicitacao_servico_sos_fk_sso_id_situacao_solicitacao" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_sso_situacao_solicitacao" table="simap.tb_sos_solicitacao_servico">
+	<columns names="sos_fk_sso_id_situacao_solicitacao" ref-type="src-columns"/>
+	<columns names="sso_id_situacao_solicitacao" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_sos_solicitacao_servico_sos_fk_tsr_id_tipo_servico" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_tsr_tipo_servico" table="simap.tb_sos_solicitacao_servico">
+	<columns names="sos_fk_tsr_id_tipo_servico" ref-type="src-columns"/>
+	<columns names="tsr_id_tipo_servico" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_tre_tecnico_responsavel_fk_tb_con_contrato" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_con_contrato" table="simap.tb_tre_tecnico_responsavel">
+	<columns names="tre_fk_con_id_contrato" ref-type="src-columns"/>
+	<columns names="con_id_contrato" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_tre_tecnico_responsavel_fk_tb_sen_situacao_entidade" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_tre_tecnico_responsavel">
+	<columns names="tre_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_tsr_tipo_servico_tsr_fk_sen_id_situacao_entidade_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="apoio.tb_sen_situacao_entidade" table="simap.tb_tsr_tipo_servico">
+	<columns names="tsr_fk_sen_id_situacao_entidade" ref-type="src-columns"/>
+	<columns names="sen_id_situacao_entidade" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="tb_tsr_tipo_servico_tsr_fk_ser_id_servico_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="simap.tb_ser_servico" table="simap.tb_tsr_tipo_servico">
+	<columns names="tsr_fk_ser_id_servico" ref-type="src-columns"/>
+	<columns names="ser_id_servico" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_tb_mun_municipio_tb_euf_estado_uf" type="relfk"
+	 custom-color="#8ffdfa"
+	 src-table="apoio.tb_mun_municipio"
+	 dst-table="apoio.tb_euf_estado_uf"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_fnc_funcionalidade_tb_gfn_grupo_funcionalidade" type="relfk"
+	 custom-color="#2f0f9f"
+	 src-table="seg.tb_fnc_funcionalidade"
+	 dst-table="seg.tb_gfn_grupo_funcionalidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_per_perfil_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#0601c6"
+	 src-table="seg.tb_per_perfil"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_per_perfil_tb_tiu_tipo_usuario" type="relfk"
+	 custom-color="#d360a0"
+	 src-table="seg.tb_per_perfil"
+	 dst-table="apoio.tb_tiu_tipo_usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_pfu_perfil_funcionalidade_tb_fnc_funcionalidade" type="relfk"
+	 custom-color="#2c4a3e"
+	 src-table="seg.tb_pfu_perfil_funcionalidade"
+	 dst-table="seg.tb_fnc_funcionalidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_pfu_perfil_funcionalidade_tb_per_perfil" type="relfk"
+	 custom-color="#24ce65"
+	 src-table="seg.tb_pfu_perfil_funcionalidade"
+	 dst-table="seg.tb_per_perfil"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_upe_usuario_perfil_tb_per_perfil" type="relfk"
+	 custom-color="#3f7833"
+	 src-table="seg.tb_upe_usuario_perfil"
+	 dst-table="seg.tb_per_perfil"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_upe_usuario_perfil_tb_usu_usuario" type="relfk"
+	 custom-color="#8ea77c"
+	 src-table="seg.tb_upe_usuario_perfil"
+	 dst-table="seg.tb_usu_usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_usu_usuario_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#063164"
+	 src-table="seg.tb_usu_usuario"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_usu_usuario_tb_tiu_tipo_usuario" type="relfk"
+	 custom-color="#5dd3ad"
+	 src-table="seg.tb_usu_usuario"
+	 dst-table="apoio.tb_tiu_tipo_usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_can_chamado_anexo_tb_cha_chamado" type="relfk"
+	 custom-color="#1f5afd"
+	 src-table="simap.tb_can_chamado_anexo"
+	 dst-table="simap.tb_cha_chamado"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_ced_contrato_edificio_tb_edi_edificio" type="relfk"
+	 custom-color="#302cf7"
+	 src-table="simap.tb_ced_contrato_edificio"
+	 dst-table="simap.tb_edi_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_ced_contrato_edificio_tb_con_contrato" type="relfk"
+	 custom-color="#2fd4d8"
+	 src-table="simap.tb_ced_contrato_edificio"
+	 dst-table="simap.tb_con_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cha_chamado_tb_cso_chamado_solicitante" type="relfk"
+	 custom-color="#c9a9a9"
+	 src-table="simap.tb_cha_chamado"
+	 dst-table="simap.tb_cso_chamado_solicitante"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cha_chamado_tb_edi_edificio" type="relfk"
+	 custom-color="#b83d89"
+	 src-table="simap.tb_cha_chamado"
+	 dst-table="simap.tb_edi_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cha_chamado_tb_pal_pavimento_local" type="relfk"
+	 custom-color="#0ff80c"
+	 src-table="simap.tb_cha_chamado"
+	 dst-table="simap.tb_pal_pavimento_local"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cha_chamado_tb_pav_pavimento" type="relfk"
+	 custom-color="#e6dee2"
+	 src-table="simap.tb_cha_chamado"
+	 dst-table="simap.tb_pav_pavimento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cma_contrato_materiais_tb_con_contrato" type="relfk"
+	 custom-color="#8139eb"
+	 src-table="simap.tb_cma_contrato_materiais"
+	 dst-table="simap.tb_con_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cma_contrato_materiais_tb_unm_unidade_medida" type="relfk"
+	 custom-color="#977354"
+	 src-table="simap.tb_cma_contrato_materiais"
+	 dst-table="apoio.tb_unm_unidade_medida"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cmp_contrato_materiais_proposta_tb_con_contrato" type="relfk"
+	 custom-color="#e12220"
+	 src-table="simap.tb_cmp_contrato_materiais_proposta"
+	 dst-table="simap.tb_con_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cmp_contrato_materiais_proposta_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#9f804b"
+	 src-table="simap.tb_cmp_contrato_materiais_proposta"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cmp_contrato_materiais_proposta_tb_unm_unidade_medida" type="relfk"
+	 custom-color="#a23185"
+	 src-table="simap.tb_cmp_contrato_materiais_proposta"
+	 dst-table="apoio.tb_unm_unidade_medida"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_con_contrato_tb_for_fornecedor" type="relfk"
+	 custom-color="#33ea81"
+	 src-table="simap.tb_con_contrato"
+	 dst-table="simap.tb_for_fornecedor"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_con_contrato_tb_tsc_tipo_situacao_contrato" type="relfk"
+	 custom-color="#f205ea"
+	 src-table="simap.tb_con_contrato"
+	 dst-table="apoio.tb_tsc_tipo_situacao_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cou_contrato_usuario_tb_con_contrato" type="relfk"
+	 custom-color="#6f02e8"
+	 src-table="simap.tb_cou_contrato_usuario"
+	 dst-table="simap.tb_con_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cou_contrato_usuario_tb_upe_usuario_perfil" type="relfk"
+	 custom-color="#79a2db"
+	 src-table="simap.tb_cou_contrato_usuario"
+	 dst-table="seg.tb_upe_usuario_perfil"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cpa_contrato_materiais_proposta_anexo_tb_cmp_contrato_ma" type="relfk"
+	 custom-color="#269460"
+	 src-table="simap.tb_cpa_contrato_materiais_proposta_anexo"
+	 dst-table="simap.tb_cmp_contrato_materiais_proposta"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cpa_contrato_materiais_proposta_anexo_tb_sen_situacao_en" type="relfk"
+	 custom-color="#053b5f"
+	 src-table="simap.tb_cpa_contrato_materiais_proposta_anexo"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cse_contrato_servico_tb_con_contrato" type="relfk"
+	 custom-color="#80a22e"
+	 src-table="simap.tb_cse_contrato_servico"
+	 dst-table="simap.tb_con_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cse_contrato_servico_tb_tsr_tipo_servico" type="relfk"
+	 custom-color="#e46bdf"
+	 src-table="simap.tb_cse_contrato_servico"
+	 dst-table="simap.tb_tsr_tipo_servico"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cso_chamado_solicitante_tb_edi_edificio" type="relfk"
+	 custom-color="#ce8250"
+	 src-table="simap.tb_cso_chamado_solicitante"
+	 dst-table="simap.tb_edi_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cso_chamado_solicitante_tb_pal_pavimento_local" type="relfk"
+	 custom-color="#c18d8c"
+	 src-table="simap.tb_cso_chamado_solicitante"
+	 dst-table="simap.tb_pal_pavimento_local"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_cso_chamado_solicitante_tb_pav_pavimento" type="relfk"
+	 custom-color="#600aad"
+	 src-table="simap.tb_cso_chamado_solicitante"
+	 dst-table="simap.tb_pav_pavimento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_ean_edificio_anexo_tb_edi_edificio" type="relfk"
+	 custom-color="#10cdf5"
+	 src-table="simap.tb_ean_edificio_anexo"
+	 dst-table="simap.tb_edi_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_edi_edificio_tb_mun_municipio" type="relfk"
+	 custom-color="#c8fdb5"
+	 src-table="simap.tb_edi_edificio"
+	 dst-table="apoio.tb_mun_municipio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_edi_edificio_tb_ine_interdicao_edificio" type="relfk"
+	 custom-color="#3067cd"
+	 src-table="simap.tb_edi_edificio"
+	 dst-table="simap.tb_ine_interdicao_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_edi_edificio_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#7dfc59"
+	 src-table="simap.tb_edi_edificio"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_fan_fornecedor_anexo_tb_for_fornecedor" type="relfk"
+	 custom-color="#019dfe"
+	 src-table="simap.tb_fan_fornecedor_anexo"
+	 dst-table="simap.tb_for_fornecedor"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_for_fornecedor_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#9a188f"
+	 src-table="simap.tb_for_fornecedor"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_hch_historico_chamado_tb_cso_chamado_solicitante" type="relfk"
+	 custom-color="#de79e5"
+	 src-table="simap.tb_hch_historico_chamado"
+	 dst-table="simap.tb_cso_chamado_solicitante"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_hch_historico_chamado_tb_edi_edificio" type="relfk"
+	 custom-color="#677a03"
+	 src-table="simap.tb_hch_historico_chamado"
+	 dst-table="simap.tb_edi_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_hch_historico_chamado_tb_pal_pavimento_local" type="relfk"
+	 custom-color="#db2091"
+	 src-table="simap.tb_hch_historico_chamado"
+	 dst-table="simap.tb_pal_pavimento_local"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_hch_historico_chamado_tb_pav_pavimento" type="relfk"
+	 custom-color="#9a09a5"
+	 src-table="simap.tb_hch_historico_chamado"
+	 dst-table="simap.tb_pav_pavimento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_hch_historico_chamado_tb_usu_usuario" type="relfk"
+	 custom-color="#411660"
+	 src-table="simap.tb_hch_historico_chamado"
+	 dst-table="seg.tb_usu_usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_his_situacao_solicitacao_tb_sos_solicitacao_servico" type="relfk"
+	 custom-color="#0f4dc5"
+	 src-table="simap.tb_his_situacao_solicitacao"
+	 dst-table="simap.tb_sos_solicitacao_servico"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_his_situacao_solicitacao_tb_sso_situacao_solicitacao" type="relfk"
+	 custom-color="#16f1ba"
+	 src-table="simap.tb_his_situacao_solicitacao"
+	 dst-table="simap.tb_sso_situacao_solicitacao"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_ine_interdicao_edificio_tb_tin_tipo_interdicao" type="relfk"
+	 custom-color="#bb43f0"
+	 src-table="simap.tb_ine_interdicao_edificio"
+	 dst-table="apoio.tb_tin_tipo_interdicao"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_inp_interdicao_pavimento_tb_ine_interdicao_edificio" type="relfk"
+	 custom-color="#248c12"
+	 src-table="simap.tb_inp_interdicao_pavimento"
+	 dst-table="simap.tb_ine_interdicao_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_inp_interdicao_pavimento_tb_pav_pavimento" type="relfk"
+	 custom-color="#a7bb86"
+	 src-table="simap.tb_inp_interdicao_pavimento"
+	 dst-table="simap.tb_pav_pavimento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_inp_interdicao_pavimento_tb_tin_tipo_interdicao" type="relfk"
+	 custom-color="#c5f64d"
+	 src-table="simap.tb_inp_interdicao_pavimento"
+	 dst-table="apoio.tb_tin_tipo_interdicao"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_ipl_interdicao_pavimento_local_tb_inp_interdicao_pavimen" type="relfk"
+	 custom-color="#efb37e"
+	 src-table="simap.tb_ipl_interdicao_pavimento_local"
+	 dst-table="simap.tb_inp_interdicao_pavimento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_ipl_interdicao_pavimento_local_tb_pal_pavimento_local" type="relfk"
+	 custom-color="#e9f0ff"
+	 src-table="simap.tb_ipl_interdicao_pavimento_local"
+	 dst-table="simap.tb_pal_pavimento_local"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_pal_pavimento_local_tb_int_interdicao" type="relfk"
+	 custom-color="#718381"
+	 src-table="simap.tb_pal_pavimento_local"
+	 dst-table="simap.tb_int_interdicao"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_pal_pavimento_local_tb_pav_pavimento" type="relfk"
+	 custom-color="#c3bf65"
+	 src-table="simap.tb_pal_pavimento_local"
+	 dst-table="simap.tb_pav_pavimento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_pal_pavimento_local_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#95c097"
+	 src-table="simap.tb_pal_pavimento_local"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_pav_pavimento_tb_edi_edificio" type="relfk"
+	 custom-color="#333cc9"
+	 src-table="simap.tb_pav_pavimento"
+	 dst-table="simap.tb_edi_edificio"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_pav_pavimento_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#52582d"
+	 src-table="simap.tb_pav_pavimento"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_ser_servico_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#9c8e4d"
+	 src-table="simap.tb_ser_servico"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_sos_solicitacao_servico_tb_cha_chamado" type="relfk"
+	 custom-color="#172a2f"
+	 src-table="simap.tb_sos_solicitacao_servico"
+	 dst-table="simap.tb_cha_chamado"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_sos_solicitacao_servico_tb_con_contrato" type="relfk"
+	 custom-color="#b2331e"
+	 src-table="simap.tb_sos_solicitacao_servico"
+	 dst-table="simap.tb_con_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_sos_solicitacao_servico_tb_ser_servico" type="relfk"
+	 custom-color="#78865b"
+	 src-table="simap.tb_sos_solicitacao_servico"
+	 dst-table="simap.tb_ser_servico"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_sos_solicitacao_servico_tb_sso_situacao_solicitacao" type="relfk"
+	 custom-color="#0ee647"
+	 src-table="simap.tb_sos_solicitacao_servico"
+	 dst-table="simap.tb_sso_situacao_solicitacao"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_sos_solicitacao_servico_tb_tsr_tipo_servico" type="relfk"
+	 custom-color="#78de3e"
+	 src-table="simap.tb_sos_solicitacao_servico"
+	 dst-table="simap.tb_tsr_tipo_servico"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_tre_tecnico_responsavel_tb_con_contrato" type="relfk"
+	 custom-color="#c52e4e"
+	 src-table="simap.tb_tre_tecnico_responsavel"
+	 dst-table="simap.tb_con_contrato"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_tre_tecnico_responsavel_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#c27f85"
+	 src-table="simap.tb_tre_tecnico_responsavel"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_tsr_tipo_servico_tb_sen_situacao_entidade" type="relfk"
+	 custom-color="#111188"
+	 src-table="simap.tb_tsr_tipo_servico"
+	 dst-table="apoio.tb_sen_situacao_entidade"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_tb_tsr_tipo_servico_tb_ser_servico" type="relfk"
+	 custom-color="#1770b6"
+	 src-table="simap.tb_tsr_tipo_servico"
+	 dst-table="simap.tb_ser_servico"
+	 src-required="false" dst-required="false"/>
+
+<permission>
+	<object name="apoio" type="schema"/>
+	<roles names="postgres"/>
+	<privileges create="true" usage="true"/>
+</permission>
+<permission>
+	<object name="apoio" type="schema"/>
+	<roles names="dml"/>
+	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="seg" type="schema"/>
+	<roles names="postgres"/>
+	<privileges create="true" usage="true"/>
+</permission>
+<permission>
+	<object name="seg" type="schema"/>
+	<roles names="dml"/>
+	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="simap" type="schema"/>
+	<roles names="postgres"/>
+	<privileges create="true" usage="true"/>
+</permission>
+<permission>
+	<object name="simap" type="schema"/>
+	<roles names="dml"/>
+	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="apoio.retira_acentuacao(text)" type="function"/>
+	<privileges execute="true"/>
+</permission>
+<permission>
+	<object name="apoio.retira_acentuacao(text)" type="function"/>
+	<roles names="postgres"/>
+	<privileges execute="true"/>
+</permission>
+<permission>
+	<object name="apoio.retira_acentuacao(text)" type="function"/>
+	<roles names="dml"/>
+	<privileges execute="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_euf_estado_uf" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_euf_estado_uf" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_mun_municipio" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_mun_municipio" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_par_parametro" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_par_parametro" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_sen_situacao_entidade" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_sen_situacao_entidade" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tin_tipo_interdicao" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tin_tipo_interdicao" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tiu_tipo_usuario" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tiu_tipo_usuario" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tsc_tipo_situacao_contrato" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tsc_tipo_situacao_contrato" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tsm_tipo_situacao_material_proposta" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_tsm_tipo_situacao_material_proposta" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_unm_unidade_medida" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="apoio.tb_unm_unidade_medida" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_fnc_funcionalidade" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_fnc_funcionalidade" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_gfn_grupo_funcionalidade" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_gfn_grupo_funcionalidade" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_per_perfil" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_per_perfil" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_pfu_perfil_funcionalidade" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_pfu_perfil_funcionalidade" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_upe_usuario_perfil" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_upe_usuario_perfil" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_usu_usuario" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="seg.tb_usu_usuario" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_can_chamado_anexo" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_can_chamado_anexo" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ced_contrato_edificio" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ced_contrato_edificio" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cha_chamado" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cha_chamado" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_chm_contrato_historico_materiais" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_chm_contrato_historico_materiais" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cma_contrato_materiais" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cma_contrato_materiais" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cmp_contrato_materiais_proposta" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cmp_contrato_materiais_proposta" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_con_contrato" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_con_contrato" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cou_contrato_usuario" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cou_contrato_usuario" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cpa_contrato_materiais_proposta_anexo" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cpa_contrato_materiais_proposta_anexo" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cse_contrato_servico" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cse_contrato_servico" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cso_chamado_solicitante" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_cso_chamado_solicitante" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ean_edificio_anexo" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ean_edificio_anexo" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_edi_edificio" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_edi_edificio" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_fan_fornecedor_anexo" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_fan_fornecedor_anexo" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_for_fornecedor" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_for_fornecedor" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_hch_historico_chamado" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_hch_historico_chamado" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_his_situacao_solicitacao" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_his_situacao_solicitacao" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ine_interdicao_edificio" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ine_interdicao_edificio" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_inp_interdicao_pavimento" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_inp_interdicao_pavimento" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_int_interdicao" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_int_interdicao" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ipl_interdicao_pavimento_local" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ipl_interdicao_pavimento_local" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_pal_pavimento_local" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_pal_pavimento_local" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_pav_pavimento" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_pav_pavimento" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ser_servico" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_ser_servico" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_sos_solicitacao_servico" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_sos_solicitacao_servico" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_sso_situacao_solicitacao" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_sso_situacao_solicitacao" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_tre_tecnico_responsavel" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_tre_tecnico_responsavel" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_tsr_tipo_servico" type="table"/>
+	<roles names="postgres"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="simap.tb_tsr_tipo_servico" type="table"/>
+	<roles names="dml"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+</dbmodel>

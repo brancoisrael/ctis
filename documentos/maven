@@ -1,0 +1,5 @@
+--Criar archetypes (arquétipos) - http://www.semeru.com.br/blog/criando-um-archetype-maven-a-partir-de-um-projeto-existente/
+mvn archetype:create-from-project
+
+-- Criar projetos a partir de archetype (arquétipos) - http://www.semeru.com.br/blog/criando-um-novo-projeto-a-partir-de-um-archetype-maven/
+mvn archetype:generate -DarchetypeGroupId=br.gov.mj.archetype-jee8 -DarchetypeArtifactId=archetype-jee8 -DarchetypeVersion=1.0.1-SNAPSHOT -DgroupId=br.com.test -DartifactId=test-archetype-id -Dversion=1.0.0-SNAPSHOT -Dpackage=br.com.test
