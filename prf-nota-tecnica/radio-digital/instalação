@@ -1,0 +1,11 @@
+
+0) Installar par par de chaves ssh https://git.prf/help/ssh/README#generating-a-new-ssh-key-pair 
+1) node npm install (no eu caso, apresentou problema na lib libpng-dev que foi resolvido com: apt-get install libpng-dev -y --no-install-recommends)
+
+
+
+
+
+1) Install compose v 1.9.3
+2) composer update
+2) sudo apt-get install php-mbstring php7.1-mbstring
