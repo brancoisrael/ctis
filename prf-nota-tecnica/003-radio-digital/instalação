@@ -5,7 +5,8 @@
 
 
 
+1) Install PHP 7.1 e 7.2
+2) Install compose v 1.9.3
+3) composer install
+4) yarn install
 
-1) Install compose v 1.9.3
-2) composer update
-2) sudo apt-get install php-mbstring php7.1-mbstring
