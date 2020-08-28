@@ -1,0 +1,24 @@
+GYN - 300 pontos
+SAJI - sistema de arrecadação - sistema financeiro
+refazer o sistema atual
+
+* SPRING FRAMEWORK E REACT JS
+* agendamento de rotinas;
+* interface com o usuário;
+* definição arquitetural proposto pelo tribunal contudo mas não colocaram essa proposta
+em atividade;
+- processamento dos dados em batch;
+- 
+
+2 DESENVOLVEDORES E 1 FRONTEND QUE FICA ALOCADO PARA ATIVIDADES PONTUAS
+
+
+O projeto tem aproximadamente 300 pontos de função, será dividido em 3 módulos (batch, backend e frontend) e a stack utilizada será Spring com React JS.
+
+Não há definições maduras da arquitetura do projeto quanto as integrações sistêmicas, utilização de micro serviços x monólito, barramento de serviços, troca de mensagens, autenticação/autorização e demais.
+
+Há requisitos funcionais homologados para dar início aos trabalhos e é esta a expectativa do cliente, sendo que os requisitos não funcionais citados acima deverão caminhar em paralelo.
+
+A equipe executora esta composta por 2 programadores e um UX que trabalhará pontualmente no projeto. 
+
+Renata espera força de trabalho para dar continuidade ao projeto, neste momento visualiso que o projeto necessite de desenvolvedores e um acompanhamento de um arquiteto/especialista para ajudar a equipe do tribunal a definir os requisitos não funcionais ainda não fechados.
