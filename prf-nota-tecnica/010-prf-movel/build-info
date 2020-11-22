@@ -1,0 +1,3 @@
+1) Executar build da imagem docker do projeto silver (docker build -f Dockerfile -t silver-prod .)
+1.1) Necessário configurar os arquivos hibernate_dados_conexao.properties e configs.properties
+2) Executar o processo de build do docker compose no projeto sistemasmoveis-api (docker-compose build)
