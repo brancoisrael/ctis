@@ -1,0 +1,5 @@
+* primeira veroa do projeto deve iniciar em produção operando com PIX;
+* persistir os dados de retorno do PIX em banco de dados a ser criado para tal;
+* criar endpoint para consulta dos retornos de pagamento (pagamento online do pix);
+* criar página web para consulta;
+* aguardar token do ambiente de HM;

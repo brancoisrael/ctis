@@ -1,0 +1,13 @@
+1) front em angular
+2) backend feito em java, pyhton e php
+3) em março de 2020 passou para BSB o ambiente produtivo
+4) construído com vários microserviços (roda em kubernetes) Java, 1 microserviço em python
+5) banco de dados postgres (dados transacionais e passagens recentes), mongo contem todo histórico sem expurgo, redis
+6) utiliza kafka
+7) análise de logs com elastick stack
+8) utiliza nyfy para gerenciar o fluxo de ações (orquestração de micro serviços)
+9) 20k de passagens por dia
+10) salva o log do trace nos micro serviços somente do primeiro no elastic search
+11) passagens recebidas no python, encaminhadas para o kafka
+12) wsocrspia (recebimento inicial da informação) - python
+13) OLK - logstash roda no api (java) e wsocrspia (python)
