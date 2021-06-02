@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cabecalho" pageWidth="612" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4bd40450-58dc-4d22-9569-1c90174445b5">
+	<property name="ireport.zoom" value="1.6105100000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nomeRelatorio" class="java.lang.String"/>
+	<parameter name="periodoContrato" class="java.lang.String"/>
+	<parameter name="situacaoContrato" class="java.lang.String"/>
+	<parameter name="periodoAluno" class="java.lang.String"/>
+	<parameter name="tipoEstagio" class="java.lang.String"/>
+	<parameter name="situacaoAluno" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ramos" class="java.lang.String"/>
+	<parameter name="concedentes" class="java.lang.String"/>
+	<parameter name="cursos" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<noData>
+		<band height="146">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="517" y="18" width="72" height="16" forecolor="#666666" uuid="eba67b66-b1ed-4be7-a5e0-cc19251546c0"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="485" y="18" width="29" height="16" forecolor="#666666" uuid="d78fe99e-7cd6-4ca2-9514-c9e46b9231be"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="48" width="488" height="20" uuid="e4e0aff2-a40f-4ee3-a0be-d9e5d23dc8b7"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nomeRelatorio}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="-3" y="0" width="236" height="34" uuid="c58f4c87-5e38-4ba4-8a66-a9d9004ff93b"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<elementGroup>
+				<rectangle radius="0">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="76" width="568" height="70" forecolor="#CCCCCC" uuid="15637893-3ada-43b1-917f-2155ef775e8b"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="8" y="86" width="85" height="15" uuid="a9151e3a-6350-4697-9d99-6880267fd013"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Período do Contrato:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="8" y="122" width="85" height="15" uuid="284d1601-ce42-45ad-8d50-11e2983bb26e"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Cursos:]]></text>
+				</staticText>
+				<line>
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="76" width="1" height="70" forecolor="#283193" backcolor="#283193" uuid="0b3ed335-b14e-4c19-a52a-ded4df09cd5b"/>
+					<graphicElement>
+						<pen lineWidth="2.0"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="292" y="86" width="67" height="15" uuid="e566472f-74fc-4f83-9bb0-9f10ebfc842e"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Tipo de Estágio:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="8" y="103" width="85" height="15" uuid="1f5aa003-4512-4195-ad85-96602ff4f6fa"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Período do Aluno:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="94" y="86" width="191" height="15" uuid="dcc31697-6154-4ea0-8d98-b5ad3f5fdfc3"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{periodoContrato}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToBandHeight" x="94" y="122" width="463" height="15" uuid="6855ce97-252d-4eb8-a7d8-04e7b9ba0911"/>
+					<textElement markup="html">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{cursos}
++ "<br>"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement stretchType="RelativeToTallestObject" x="94" y="103" width="191" height="15" uuid="d65bf85e-b8d4-4f2a-8bda-be9498f15193"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{periodoAluno}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="359" y="86" width="68" height="15" uuid="aaf55c17-2839-4023-9e38-4b1ce521b57f"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{tipoEstagio}]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+		</band>
+	</noData>
+</jasperReport>

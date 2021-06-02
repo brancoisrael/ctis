@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cabecalho" pageWidth="810" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="770" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4bd40450-58dc-4d22-9569-1c90174445b5">
+	<property name="ireport.zoom" value="1.126972201352368"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="dataFiltro" class="java.util.Date"/>
+	<parameter name="nomeRelatorio" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[WITH mensalidade AS (
+    SELECT
+        substr(fl.mes_ano_folha,0, 2)  || '/' ||  substr(fl.mes_ano_folha, 3) ano,
+        (
+            SELECT
+                valor_desc
+            FROM
+                faixa_etaria_mensalidade
+            WHERE
+                ( trunc((months_between(SYSDATE, TO_DATE(TO_CHAR(b.dat_nasc, 'DD/MM/YYYY'), 'dd/mm/yy'))) / 12) ) BETWEEN inicio AND
+                fim
+        ) valor,
+        nvl(t.nom_tipo_depend, 'TITULAR') tipo_dependente
+    FROM
+        beneficiario            b
+        LEFT JOIN tipo_dependente         t ON t.cod_tipo_depend = b.cod_tipo_depend
+        INNER JOIN folha.fl_serv_tot_mes   fl ON fl.mat_servidor = b.mat_servidor
+    WHERE
+        fl.cod_rubrica = '6190.000'
+), tb_valor_mens_por_tp_depend AS (
+    SELECT
+        tipo_dependente,
+        ano,
+        SUM(valor) valor
+    FROM
+        mensalidade
+        where to_date(ano, 'MM/yyyy') >=  ADD_MONTHS(TRUNC($P{dataFiltro}, 'MONTH'), -12)
+        and  to_date(ano, 'MM/yyyy') <= $P{dataFiltro}
+    GROUP BY
+        tipo_dependente,
+        ano
+    ORDER BY
+        ano
+)
+
+select * from tb_valor_mens_por_tp_depend]]>
+	</queryString>
+	<field name="TIPO_DEPENDENTE" class="java.lang.String"/>
+	<field name="ANO" class="java.lang.String"/>
+	<field name="VALOR" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="73">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="717" y="1" width="72" height="16" forecolor="#666666" uuid="eba67b66-b1ed-4be7-a5e0-cc19251546c0"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="695" y="1" width="22" height="16" forecolor="#666666" uuid="d78fe99e-7cd6-4ca2-9514-c9e46b9231be"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<elementGroup/>
+			<staticText>
+				<reportElement x="98" y="1" width="193" height="20" uuid="fcf5fc71-59ef-4ce3-9ce6-decd28c45c30"/>
+				<text><![CDATA[Tribunal Regional Eleitoral - AM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="98" y="21" width="193" height="20" uuid="d1cc3bc8-1fc1-4a99-bc89-8eadb573377a"/>
+				<text><![CDATA[TRE-Saúde]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="2" width="98" height="50" uuid="1ef09ff0-fe98-4eb0-921f-eb724bc98459"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="98" y="41" width="513" height="27" uuid="c26ba546-3dcd-47ac-b7c9-e0da6121d829"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nomeRelatorio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="375">
+			<barChart>
+				<chart>
+					<reportElement x="0" y="0" width="770" height="375" uuid="893153a8-8fa5-4924-bf07-5b9e82b20996"/>
+					<chartTitle>
+						<titleExpression><![CDATA["MENSALIDADE POR DEPENDENTE"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{TIPO_DEPENDENTE}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{ANO}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{VALOR}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="0" width="770" height="50" uuid="7688ebaf-643d-47bb-be97-15e24922ebe4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[O RELATÓRIO NÃO POSSUI DADOS!]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

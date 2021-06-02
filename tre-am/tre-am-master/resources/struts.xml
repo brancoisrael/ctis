@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.enable.DynamicMethodInvocation"
+		value="false" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.custom.i18n.resources"
+		value="ApplicationResources" />
+	<constant name="struts.action.excludePattern" value="/Simple" />
+	<constant name="struts.multipart.maxSize" value="50000000" />
+
+	<package name="default" extends="struts-default,json-default"
+		namespace="/">
+		<interceptors>
+			<interceptor name="json"
+				class="org.apache.struts2.json.JSONInterceptor" />
+			<interceptor name="authentication"
+				class="br.jus.tream.saude.interceptor.AppInterceptor">
+			</interceptor>
+			<interceptor-stack name="authStack">
+				<interceptor-ref name="authentication" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		
+		 <default-interceptor-ref name="authStack" />
+		 
+		 <global-results>
+            <result name="loginNecessario" type="chain">
+                <param name="actionName">loginNecessario</param>
+                <param name="namespace">/login</param>
+            </result>
+            <result name="success" type="stream">
+			  <param name="contentType">application/pdf</param>
+			  <param name="inputName">${imageStream}</param>
+			  <param name="contentDisposition">attachment;filename="document.pdf"</param>
+			  <param name="bufferSize">4096</param>
+			  <param name="contentLength">${contentLength}</param>
+			</result>
+        </global-results>
+
+<!-- 		<global-results> -->
+<!-- 			<result name="loginNecessario" type="redirectAction">../frmLogin.jsp</result> -->
+<!-- 		</global-results> -->
+
+		<action name="doInserir"
+			class="br.jus.tream.saude.action.GuiaClinicaLaboratorialAction"
+			method="doInserir">
+			<interceptor-ref name="json">
+				<param name="enableSMD">true</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+				<param name="root">frmGuiaClinicaLaboratorialDTO</param>
+			</interceptor-ref>
+			<result name="success" type="json">
+				<param name="root">frmGuiaClinicaLaboratorialDTO</param>
+				<param name="ignoreSMDMethodInterfaces">false</param>
+			</result>
+		</action>
+		
+		 
+	</package>
+
+
+
+</struts>

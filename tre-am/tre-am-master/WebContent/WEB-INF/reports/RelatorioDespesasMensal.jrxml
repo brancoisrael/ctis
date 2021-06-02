@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cabecalho" pageWidth="950" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="910" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4bd40450-58dc-4d22-9569-1c90174445b5">
+	<property name="ireport.zoom" value="1.0245201830476072"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="LastRow" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{ANO}.equals("MÉDIA*")]]></conditionExpression>
+			<style backcolor="#CAC5BB"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="dataFiltro" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[WITH mensalidade AS (
+    SELECT
+        substr(fl.mes_ano_folha,0, 2)  || '/' ||  substr(fl.mes_ano_folha, 3) ano,
+        (
+            SELECT
+                valor_desc
+            FROM
+                faixa_etaria_mensalidade
+            WHERE
+                ( trunc((months_between(SYSDATE, TO_DATE(TO_CHAR(b.dat_nasc, 'DD/MM/YYYY'), 'dd/mm/yy'))) / 12) ) BETWEEN inicio AND
+                fim
+        ) valor,
+        nvl(t.nom_tipo_depend, 'TITULAR') tipo_dependente
+    FROM
+        beneficiario            b
+        LEFT JOIN tipo_dependente         t ON t.cod_tipo_depend = b.cod_tipo_depend
+        INNER JOIN folha.fl_serv_tot_mes   fl ON fl.mat_servidor = b.mat_servidor
+    WHERE
+        fl.cod_rubrica in ('6190.000', '6191.000')
+        AND to_date(fl.mes_ano_folha, 'MMyyyy') >=  ADD_MONTHS(TRUNC($P{dataFiltro}, 'MONTH'), -12)
+        AND  to_date(fl.mes_ano_folha, 'MMyyyy') <= $P{dataFiltro}
+), tb_valor_mens_por_tp_depend AS (
+    SELECT
+        tipo_dependente,
+        ano,
+        SUM(valor) valor
+    FROM
+        mensalidade
+    GROUP BY
+        tipo_dependente,
+        ano
+    ORDER BY
+        ano
+), tb_valor_mens_sintetico AS (
+    SELECT
+        "ANO",
+        "TITULAR",
+        "FILHO(A)",
+        "CÔNJUGE",
+        "MÃE - ECONÔMICO",
+        "COMPANHEIRO(A)",
+        "PAI - ECONÔMICO",
+        "MENOR SOB GUARDA",
+        "ENTEADO(A)",
+        ( nvl("TITULAR", 0) + nvl("FILHO(A)", 0) + nvl("CÔNJUGE", 0) + nvl("MÃE - ECONÔMICO", 0) + nvl("COMPANHEIRO(A)", 0) + nvl("PAI - ECONÔMICO"
+        , 0) + nvl("MENOR SOB GUARDA", 0) + nvl("ENTEADO(A)", 0) ) AS total
+    FROM
+        tb_valor_mens_por_tp_depend PIVOT (
+            SUM ( valor )
+            FOR tipo_dependente
+            IN ( 'TITULAR' AS titular, 'FILHO(A)' AS "FILHO(A)", 'CÔNJUGE' AS "CÔNJUGE", 'MÃE - ECONÔMICO' AS "MÃE - ECONÔMICO", 'COMPANHEIRO(A)'
+            AS "COMPANHEIRO(A)", 'PAI - ECONÔMICO' AS "PAI - ECONÔMICO", 'MENOR SOB GUARDA' AS "MENOR SOB GUARDA", 'ENTEADO(A)' AS
+            "ENTEADO(A)" )
+
+        )
+),
+ tb_media_valor_mens as (
+ SELECT
+'MÉDIA*' "MÉDIA",
+    round(AVG(nvl("TITULAR", 0)), 2) "TITULAR",
+    round(AVG(nvl("FILHO(A)", 0)), 2) "FILHO(A)",
+    round(AVG(nvl("CÔNJUGE", 0)), 2) "CÔNJUGE",
+    round(AVG(nvl("MÃE - ECONÔMICO", 0)), 2) "MÃE - ECONÔMICO",
+    round(AVG(nvl("COMPANHEIRO(A)", 0)), 2) "COMPANHEIRO(A)",
+    round(AVG(nvl("PAI - ECONÔMICO", 0)), 2) "PAI - ECONÔMICO",
+    round(AVG(nvl("MENOR SOB GUARDA", 0)), 2) "MENOR SOB GUARDA",
+    round(AVG(nvl("ENTEADO(A)", 0)), 2) "ENTEADO(A)",
+    round(AVG(nvl("TITULAR", 0) + nvl("FILHO(A)", 0) + nvl("CÔNJUGE", 0) + nvl("MÃE - ECONÔMICO", 0) + nvl("COMPANHEIRO(A)", 0) +
+    nvl("PAI - ECONÔMICO", 0) + nvl("MENOR SOB GUARDA", 0) + nvl("ENTEADO(A)", 0)), 2) AS total
+    FROM tb_valor_mens_sintetico group by 'MÉDIA*'
+ ),
+
+resultado_final as (
+select * from tb_valor_mens_sintetico
+UNION ALL
+select * from tb_media_valor_mens)
+Select * from resultado_final order by ano desc]]>
+	</queryString>
+	<field name="ANO" class="java.lang.String"/>
+	<field name="TITULAR" class="java.math.BigDecimal"/>
+	<field name="FILHO(A)" class="java.math.BigDecimal"/>
+	<field name="CÔNJUGE" class="java.math.BigDecimal"/>
+	<field name="MÃE - ECONÔMICO" class="java.math.BigDecimal"/>
+	<field name="COMPANHEIRO(A)" class="java.math.BigDecimal"/>
+	<field name="PAI - ECONÔMICO" class="java.math.BigDecimal"/>
+	<field name="MENOR SOB GUARDA" class="java.math.BigDecimal"/>
+	<field name="ENTEADO(A)" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="04a84d4e-d36c-42b9-ba5a-59282081918f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TITULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="190" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="6d7fe8c9-963e-4d36-99ac-32e5ac8324f9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[FILHO(A)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="280" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="5cbaf1ab-7323-4049-a804-afd0d4426ae9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CÔNJUGE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="370" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="8e3f8851-24e9-4b3c-b2bd-08c428a2be33"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[MÃE - ECONÔMICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="460" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="be09379d-15b2-43fc-99d5-6062e7ae7d5b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[COMPANHEIRO(A)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="550" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="fb9a4f2f-1721-4371-869f-113537b6b862"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PAI - ECONÔMICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="640" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="4a9c0451-9277-4404-bd37-21379bd821d8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[MENOR SOB GUARDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="730" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="0f6035b2-28ad-4e3a-b0d3-7a174396e92f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ENTEADO(A)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="820" y="0" width="90" height="20" backcolor="#808080" uuid="325d79aa-0697-403e-8782-6f323bd1c090"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21">
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="190" y="0" width="90" height="20" uuid="679af56a-f3bb-44e2-a519-8451b23712ee"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FILHO(A)}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="280" y="0" width="90" height="20" uuid="59413051-f51c-4a3e-af1c-b9bd62f37f3d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CÔNJUGE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="370" y="0" width="90" height="20" uuid="ab4be6e7-5c6b-453e-939c-fee677e5d088"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MÃE - ECONÔMICO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="460" y="0" width="90" height="20" uuid="9106722b-b196-4106-a938-9e32cb60c647"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPANHEIRO(A)}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="550" y="0" width="90" height="20" uuid="a56e18ff-97e3-4128-898a-eebb2441558d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAI - ECONÔMICO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="640" y="0" width="90" height="20" uuid="d32ebc1b-3d3c-4477-96c6-d73699d77707"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MENOR SOB GUARDA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="730" y="0" width="90" height="20" uuid="6c88675d-7a8a-4b8a-8557-f5a7543bb48f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ENTEADO(A)}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="820" y="0" width="90" height="20" backcolor="#808080" uuid="8e7edab1-67f4-4c7a-a18d-242619cdf3d7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="LastRow" mode="Opaque" x="0" y="0" width="100" height="20" uuid="57a98ccc-131d-4308-82da-3f8481393aec"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ANO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="LastRow" mode="Opaque" x="100" y="0" width="90" height="20" uuid="da150e26-8e62-4be6-a4f8-99733a0c9734"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TITULAR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

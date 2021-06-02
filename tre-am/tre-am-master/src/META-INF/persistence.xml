@@ -1,0 +1,48 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+  version="2.1">
+   
+   <persistence-unit name="oracle"> 
+	   <!--<provider>org.hibernate.ejb.HibernatePersistence</provider> -->
+	   <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+	   	<properties> 
+	   		<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" /> 
+	   		<property name="hibernate.connection.url" value="jdbc:oracle:thin:@10.22.10.102:1521:adm" />
+	   		<property name="hibernate.connection.driver_class" value="oracle.jdbc.OracleDriver" /> 
+	   		<property name="hibernate.connection.username" value="admtremaissaude" /> 
+	   		<property name="hibernate.connection.password" value="147258369" /> 
+	   		<property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.default_batch_fetch_size" value="32"/>
+            <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
+	   	</properties> 
+   	</persistence-unit> 
+</persistence>
+
+<!-- 
+<?xml version="1.0" encoding="UTF-8"?>
+ Persistence deployment descriptor for dev profile 
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" 
+             version="2.0">
+             
+    <persistence-unit name="Sancoes" transaction-type="JTA">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>java:/sancoesDatasource</jta-data-source>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.default_batch_fetch_size" value="32"/>
+            <property name="hibernate.default_schema" value="ADMSANCOES"/>
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
+            <property name="jboss.entity.manager.factory.jndi.name" value="java:/sancoesSessionFactory"/>
+        </properties>
+    </persistence-unit>
+    
+</persistence>-->
+	
